@@ -1,0 +1,8 @@
+package examples
+
+import StdIO.Console
+
+let function main() be void:
+    let str  = "Hello World!" be string
+    print(str)
+end
