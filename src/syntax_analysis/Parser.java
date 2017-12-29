@@ -6,7 +6,6 @@ import lexical_analysis.TokenType;
 import syntax_analysis.tree.*;
 
 import java.util.ArrayList;
-import java.util.logging.LoggingPermission;
 
 public class Parser implements Cloneable {
 
@@ -76,7 +75,6 @@ public class Parser implements Cloneable {
                 } else {
                     declarations.addAll(declaration_list());
                 }
-                break;
             }
 
         }
@@ -97,7 +95,8 @@ public class Parser implements Cloneable {
             eat(TokenType.ID);
         }
 
-        int line = lexer.line;
+        int line = lexer.line - 1;
+        eat(TokenType.EOL);
         while (current_token.type == TokenType.EOL)
             eat(TokenType.EOL);
 
@@ -120,8 +119,9 @@ public class Parser implements Cloneable {
                 eat(TokenType.MUL_OP);
         }
 
-        int line = lexer.line;
+        int line = lexer.line - 1;
 
+        eat(TokenType.EOL);
         while (current_token.type == TokenType.EOL)
             eat(TokenType.EOL);
 
@@ -155,9 +155,10 @@ public class Parser implements Cloneable {
         eat(TokenType.R_PAREN);
         eat(TokenType.BE);
         Type type_node = type_spec();
+        int line = lexer.line;
         CompoundStmt body = compound_statement();
 
-        return new FunctionDeclaration(type_node, name, params, body, lexer.line);
+        return new FunctionDeclaration(type_node, name, params, body, line);
     }
 
     private ArrayList<Param> parameters() {
@@ -261,7 +262,13 @@ public class Parser implements Cloneable {
         }
 
         eat(TokenType.END);
-        return new CompoundStmt(result, lexer.line);
+
+        int line = lexer.line - 1;
+        eat(TokenType.EOL);
+        while (current_token.type == TokenType.EOL)
+            eat(TokenType.EOL);
+
+        return new CompoundStmt(result, line);
     }
 
     private boolean check_jump_statement(){
@@ -361,8 +368,12 @@ public class Parser implements Cloneable {
             eat(TokenType.L_PAREN);
             Node setup = expression_statement(false);
             eat(TokenType.COLON);
+            while (current_token.type == TokenType.EOL)
+                eat(TokenType.EOL);
             Node condition = expression_statement(false);
             eat(TokenType.COLON);
+            while (current_token.type == TokenType.EOL)
+                eat(TokenType.EOL);
             Node increment = new NoOp(lexer.line);
             if(current_token.type != TokenType.R_PAREN){
                 increment = expression();
@@ -575,6 +586,7 @@ public class Parser implements Cloneable {
         Token currentToken = current_token;
         lexer = tmpLexer;
 
+        boolean result = false;
         if(current_token.type == TokenType.L_PAREN){
             eat(TokenType.L_PAREN);
             if(     current_token.type == TokenType.BOOLEAN ||
@@ -585,7 +597,9 @@ public class Parser implements Cloneable {
                     current_token.type == TokenType.DOUBLE  ||
                     current_token.type == TokenType.CHAR){
                 eat(current_token.type);
-                return current_token.type == TokenType.R_PAREN;
+
+                result = current_token.type == TokenType.R_PAREN;
+
             }
         }
 
@@ -593,7 +607,7 @@ public class Parser implements Cloneable {
         lexer = currentLexer;
         current_token = currentToken;
         //return
-        return false;
+        return result;
     }
 
     private Node cast_expression(){
@@ -709,7 +723,8 @@ public class Parser implements Cloneable {
                 token.type == TokenType.FLOAT ||
                 token.type == TokenType.DOUBLE ||
                 token.type == TokenType.VOID ||
-                token.type == TokenType.CHAR) {
+                token.type == TokenType.CHAR ||
+                token.type == TokenType.VOID) {
             eat(token.type);
             return new Type(token, lexer.line);
         }

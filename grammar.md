@@ -49,7 +49,7 @@
 
 
 ##### compound_statement
->: COLON EOL+ ([declaration_list](#declaration_list) | [statement](#statment))* END
+>: COLON EOL+ ([declaration_list](#declaration_list) | [statement](#statment))* END (EOL)*
 
 ##### jump_statement
 >: RETURN [expression](#expression)? EOL+<br>
@@ -62,7 +62,7 @@
 ##### iteration_statement
 >: WHILE L_PAREN [expression](#expression) R_PAREN [statement](#statement)<br>
 >| DO [statement](#statement) WHILE L_PAREN [expression](#expression) R_PAREN EOL+<br>
->|FOR L_PAREN [expression_statement](#expression_statement)(NO_EOL) COLON [expression_statement](#expression_statement)(NO_EOL) COLON ([expression](#expression))? R_PAREN [statement](#statement)
+>|FOR L_PAREN [expression_statement](#expression_statement)(EOL)* COLON [expression_statement](#expression_statement)(EOL)* COLON ([expression](#expression))? R_PAREN [statement](#statement)
 
 ##### expression_statement
 >: [expression](#expression)* EOL+

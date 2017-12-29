@@ -1,10 +1,10 @@
 import lexical_analysis.Lexer;
-import lexical_analysis.Token;
-import lexical_analysis.TokenType;
+import semantic_analysis.SemanticAnalyzer;
 import syntax_analysis.Parser;
 import syntax_analysis.tree.Node;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
@@ -17,6 +17,8 @@ public class Main {
         lexer = new Lexer(text, true);
         Parser parser = new Parser(lexer);
         Node tree = parser.parse();
+        SemanticAnalyzer analyzer = new SemanticAnalyzer(tree, true);
+        analyzer.analyze();
     }
 
     private static String compileTerminal(String line){

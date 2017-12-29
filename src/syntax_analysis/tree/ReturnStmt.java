@@ -2,7 +2,7 @@ package syntax_analysis.tree;
 
 public class ReturnStmt extends Node {
 
-    private Node expression;
+    public Node expression;
 
     public ReturnStmt(Node expression, int line){
         super(line);

@@ -2,7 +2,17 @@ package examples
 
 import StdIO.Console
 
+let function print(int myval) be void:
+    return
+end
+
+let function print(double oja) be int:
+    return -1
+end
+
 let function main() be void:
     let str  = "Hello World!" be string
-    print(str)
+    let var be int
+    var = print((double) 1.0)
+
 end
