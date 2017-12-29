@@ -19,6 +19,8 @@ public interface Visitor {
 
     public GType visit(FunctionCall functionCall);
     public void visit(FunctionDeclaration functionDeclaration);
+
+    public void visit(FunctionBody compoundStmt);
     public void visit(IfStmt ifStmt);
     public void visit(ImportFile importFile);
 

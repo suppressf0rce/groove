@@ -93,6 +93,8 @@ public class SemanticAnalyzer implements Visitor {
             visit((VarDeclaration) node);
         else if (node instanceof WhileStmt)
             visit((WhileStmt) node);
+        else if (node instanceof FunctionBody)
+            visit((FunctionBody) node);
 
         return null;
     }
@@ -124,6 +126,19 @@ public class SemanticAnalyzer implements Visitor {
     @Override
     public void visit(BreakStmt breakStmt) {
 
+    }
+
+    @Override
+    public void visit(FunctionBody functionBody) {
+        current_scope = new ScopedSymbolTable(current_scope.name, current_scope.scope_level + 1, current_scope);
+
+        for (Node child : functionBody.children) {
+            if (child instanceof ReturnStmt)
+                functionBody.returnStmt = (ReturnStmt) child;
+            visit(child);
+        }
+
+        current_scope = current_scope.enclosing_scope;
     }
 
     @Override
@@ -242,6 +257,36 @@ public class SemanticAnalyzer implements Visitor {
         current_scope.enclosing_scope.insert(function_symbol);
 
         visit(functionDeclaration.body);
+
+        //Check if function needs return statement
+        if (!type_name.equals("void")) {
+            if (functionDeclaration.body.returnStmt == null) {
+                ArrayList<GType> params = new ArrayList<>();
+                for (Symbol symbol : function_symbol.params) {
+                    params.add(new GType(symbol.type.name));
+                }
+
+                error("Function '" + function_name + "("
+                        + params.stream().map(Object::toString).collect(Collectors.joining(", "))
+                        + ")' expects return statement but it wasn't found at line: " + functionDeclaration.line);
+            } else {
+
+                //Checking if the return statements match each other
+
+                ArrayList<GType> params = new ArrayList<>();
+                for (Symbol symbol : function_symbol.params) {
+                    params.add(new GType(symbol.type.name));
+                }
+                GType returnType = visit(functionDeclaration.body.returnStmt);
+                if (!new GType(type_name).equals(returnType)) {
+                    error("Incompatible return type for function '" + function_name + "("
+                            + params.stream().map(Object::toString).collect(Collectors.joining(", "))
+                            + ")' expects '" + type_name + "' but found '" + returnType + "' at line: " + functionDeclaration.line);
+                }
+
+            }
+        }
+
         current_scope = current_scope.enclosing_scope;
     }
 

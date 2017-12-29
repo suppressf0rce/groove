@@ -22,8 +22,10 @@
 >: IMPORT ID (DOT (ID | MUL_OP))*
 
 ##### function_declaration
->: LET FUNCTION ID L_PAREN [parameters](#parameters) R_PAREN BE [type_spec](#type_spec) [compound_statement](#compound_statement)
+>: LET FUNCTION ID L_PAREN [parameters](#parameters) R_PAREN BE [type_spec](#type_spec) [function_body](#function_body)
 
+##### function_body
+>: COLON EOL+ ([declaration_list](#declaration_list) | [statement](#statement))* END (EOL)*
 
 ##### parameters
 >: [type_spec](#type_spec) [variable](#variable) (COMMA [type_spec](#type_spec) [variable](#variable))*
@@ -49,7 +51,7 @@
 
 
 ##### compound_statement
->: COLON EOL+ ([declaration_list](#declaration_list) | [statement](#statment))* END (EOL)*
+>: COLON EOL+ ([declaration_list](#declaration_list) | [statement](#statement))* END (EOL)*
 
 ##### jump_statement
 >: RETURN [expression](#expression)? EOL+<br>
