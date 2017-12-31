@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class GType {
 
     public static HashMap<String, String> types;
-    public static String[] order = {"char", "string", "boolean", "int", "long", "float", "double"};
+    public static String[] order = {"char", "boolean", "int", "long", "float", "double", "string"};
 
     static {
         types = new HashMap<>();

@@ -12,7 +12,7 @@ end
 let function main() be void:
     let str  = "Hello World!" be string
     let var be int
-    var = print((double) 1.0)
+    print((double) 1.0)
 
 
 

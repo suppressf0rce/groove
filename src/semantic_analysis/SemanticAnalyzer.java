@@ -11,20 +11,19 @@ import java.util.stream.Collectors;
 public class SemanticAnalyzer implements Visitor {
 
     public boolean throw_exceptions;
-    private Node tree;
     private ScopedSymbolTable current_scope;
 
-    public SemanticAnalyzer(Node tree, boolean throw_exceptions) {
-        this.tree = tree;
+    private SemanticAnalyzer(boolean throw_exceptions) {
         current_scope = null;
         this.throw_exceptions = throw_exceptions;
     }
 
-    public void analyze() {
-        visit(tree);
+    public static void analyze(Node tree, boolean throw_exceptions) {
+        SemanticAnalyzer analyzer = new SemanticAnalyzer(throw_exceptions);
+        analyzer.visit(tree);
     }
 
-    public void error(String message) {
+    private void error(String message) {
         if (throw_exceptions) {
             try {
                 throw new Exception("Semantic error: " + message);

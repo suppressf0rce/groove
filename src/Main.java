@@ -1,3 +1,4 @@
+import Interpreter.Interpreter;
 import lexical_analysis.Lexer;
 import semantic_analysis.SemanticAnalyzer;
 import syntax_analysis.Parser;
@@ -17,8 +18,9 @@ public class Main {
         lexer = new Lexer(text, true);
         Parser parser = new Parser(lexer);
         Node tree = parser.parse();
-        SemanticAnalyzer analyzer = new SemanticAnalyzer(tree, true);
-        analyzer.analyze();
+        SemanticAnalyzer.analyze(tree, true);
+
+        Interpreter.run(tree);
     }
 
     private static String compileTerminal(String line){
@@ -120,7 +122,6 @@ public class Main {
                     terminal();
                 }
             }
-
 
 
         }else{
