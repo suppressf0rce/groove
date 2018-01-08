@@ -476,6 +476,44 @@ public class Terminal extends GType {
         throw new ArithmeticException("Invalid logic operation between '" + this + "' and '" + other + "'");
     }
 
+    public Terminal log_and(Terminal other) throws Exception {
+        String ttype = getType(other);
+        Terminal t1 = convert(this, ttype);
+        Terminal t2 = convert(other, ttype);
+
+        if (t1 == null || t2 == null)
+            throw new RuntimeException("Incompatible type conversion of '" + this + "' and '" + other + "'");
+
+        Object l = toObject(ttype, t1.value);
+        Object r = toObject(ttype, t2.value);
+
+        if (l instanceof Boolean) {
+            Boolean result = (Boolean) l && (Boolean) r;
+            return new Terminal("boolean", result ? "true" : "false");
+        }
+
+        throw new ArithmeticException("Invalid logic operation between '" + this + "' and '" + other + "'");
+    }
+
+    public Terminal log_or(Terminal other) throws Exception {
+        String ttype = getType(other);
+        Terminal t1 = convert(this, ttype);
+        Terminal t2 = convert(other, ttype);
+
+        if (t1 == null || t2 == null)
+            throw new RuntimeException("Incompatible type conversion of '" + this + "' and '" + other + "'");
+
+        Object l = toObject(ttype, t1.value);
+        Object r = toObject(ttype, t2.value);
+
+        if (l instanceof Boolean) {
+            Boolean result = (Boolean) l || (Boolean) r;
+            return new Terminal("boolean", result ? "true" : "false");
+        }
+
+        throw new ArithmeticException("Invalid logic operation between '" + this + "' and '" + other + "'");
+    }
+
     public Terminal eq(Terminal other) throws Exception {
         String ttype = getType(other);
         Terminal t1 = convert(this, ttype);

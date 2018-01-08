@@ -1,18 +1,18 @@
 package Interpreter.memory;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Scope {
 
     public String scope_name;
     public Scope parent_scope;
-    private HashMap<String, Object> values;
+    public LinkedHashMap<String, Object> values;
 
     public Scope(String scope_name, Scope parent_scope) {
         this.scope_name = scope_name;
         this.parent_scope = parent_scope;
 
-        values = new HashMap<>();
+        values = new LinkedHashMap<>();
     }
 
     public void set_item(String key, Object value) {

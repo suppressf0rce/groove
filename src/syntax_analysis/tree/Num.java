@@ -5,6 +5,7 @@ import lexical_analysis.Token;
 public class Num extends Node {
 
     public Token token;
+    public String value;
 
     public Num(Token token, int line){
         super(line);

@@ -18,9 +18,10 @@ public interface Visitor {
     public void visit(ForStmt forStmt);
 
     public GType visit(FunctionCall functionCall);
-    public void visit(FunctionDeclaration functionDeclaration);
 
-    public void visit(FunctionBody compoundStmt);
+    public GType visit(FunctionDeclaration functionDeclaration);
+
+    public GType visit(FunctionBody compoundStmt);
     public void visit(IfStmt ifStmt);
     public void visit(ImportFile importFile);
 

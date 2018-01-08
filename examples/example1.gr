@@ -1,23 +1,9 @@
 package examples
 
-import StdIO.Console
-
-let function print(int myval) be void:
-end
-
-let function print(double oja) be void:
-    return
-end
+import groove.Console
 
 let function main() be void:
     let str  = "Hello World!" be string
     let var be int
-    print((double) 1.0)
-
-
-
-
-
-
-
+    print(1)
 end

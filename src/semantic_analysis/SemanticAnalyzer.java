@@ -5,9 +5,12 @@ import semantic_analysis.table.*;
 import syntax_analysis.Visitor;
 import syntax_analysis.tree.*;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("Duplicates")
 public class SemanticAnalyzer implements Visitor {
 
     public boolean throw_exceptions;
@@ -48,6 +51,8 @@ public class SemanticAnalyzer implements Visitor {
             return visit((BinOp) node);
         else if (node instanceof BreakStmt)
             visit((BreakStmt) node);
+        else if (node instanceof FunctionBody)
+            visit((FunctionBody) node);
         else if (node instanceof CompoundStmt)
             visit((CompoundStmt) node);
         else if (node instanceof ContinueStmt)
@@ -92,8 +97,6 @@ public class SemanticAnalyzer implements Visitor {
             visit((VarDeclaration) node);
         else if (node instanceof WhileStmt)
             visit((WhileStmt) node);
-        else if (node instanceof FunctionBody)
-            visit((FunctionBody) node);
 
         return null;
     }
@@ -128,7 +131,7 @@ public class SemanticAnalyzer implements Visitor {
     }
 
     @Override
-    public void visit(FunctionBody functionBody) {
+    public GType visit(FunctionBody functionBody) {
         current_scope = new ScopedSymbolTable(current_scope.name, current_scope.scope_level + 1, current_scope);
 
         for (Node child : functionBody.children) {
@@ -138,6 +141,7 @@ public class SemanticAnalyzer implements Visitor {
         }
 
         current_scope = current_scope.enclosing_scope;
+        return null;
     }
 
     @Override
@@ -228,7 +232,7 @@ public class SemanticAnalyzer implements Visitor {
     }
 
     @Override
-    public void visit(FunctionDeclaration functionDeclaration) {
+    public GType visit(FunctionDeclaration functionDeclaration) {
         String type_name = functionDeclaration.type_node.value;
         Symbol type_symbol = current_scope.lookup(type_name, false);
 
@@ -287,6 +291,7 @@ public class SemanticAnalyzer implements Visitor {
         }
 
         current_scope = current_scope.enclosing_scope;
+        return null;
     }
 
     @Override
@@ -298,7 +303,54 @@ public class SemanticAnalyzer implements Visitor {
 
     @Override
     public void visit(ImportFile importFile) {
-        //TODO: add imports support
+        if (importFile.path.startsWith("groove.")) {
+            String path[] = importFile.path.split("\\.");
+            String className = path[path.length - 1];
+            try {
+                Class<?> c = Class.forName("Interpreter.groove." + className);
+                for (Method method : c.getDeclaredMethods()) {
+
+                    String type_name = method.getReturnType().getName();
+                    Symbol type_symbol = current_scope.lookup(type_name, false);
+
+                    String function_name = method.getName();
+                    FunctionSymbol function_symbol = new FunctionSymbol(function_name, type_symbol, null);
+
+                    current_scope = new ScopedSymbolTable(function_name, current_scope.scope_level + 1, current_scope);
+
+                    for (Parameter param : method.getParameters()) {
+                        String p_type_name = param.getType().getName();
+                        if (p_type_name.endsWith("String"))
+                            p_type_name = "string";
+                        Symbol p_type_symbol = current_scope.lookup(p_type_name, false);
+
+                        String var_name = param.getName();
+                        VarSymbol var_symbol = new VarSymbol(var_name, p_type_symbol);
+                        function_symbol.params.add(var_symbol);
+                    }
+
+                    if (current_scope.enclosing_scope.lookup(function_name, false) != null) {
+
+                        ArrayList<GType> params = new ArrayList<>();
+                        for (Symbol symbol : function_symbol.params) {
+                            params.add(new GType(symbol.type.name));
+                        }
+
+                        if (current_scope.enclosing_scope.lookup(new FunctionKey(function_name, params), false) != null)
+                            error("Duplicate function '" + function_name + "(" +
+                                    params.stream().map(Object::toString)
+                                            .collect(Collectors.joining(", ")) + ")' found at line: " + importFile.line);
+                    }
+
+                    current_scope.enclosing_scope.insert(function_symbol);
+                    current_scope = current_scope.enclosing_scope;
+                }
+            } catch (ClassNotFoundException e) {
+                error("Could not find builtin class '" + className + "'");
+            }
+        } else {
+            //TODO: add imports support from other files
+        }
     }
 
     @Override

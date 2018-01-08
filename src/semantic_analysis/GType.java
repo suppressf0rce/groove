@@ -26,8 +26,8 @@ public class GType {
     }
 
     private GType calc_type(GType other) {
-        int left_order = Arrays.asList(types).indexOf(type);
-        int right_order = Arrays.asList(types).indexOf(other.type);
+        int left_order = Arrays.asList(order).indexOf(type);
+        int right_order = Arrays.asList(order).indexOf(other.type);
         return new GType(order[Math.max(left_order, right_order)]);
     }
 
@@ -52,8 +52,8 @@ public class GType {
 
     @Override
     public int hashCode() {
-        return GType.types.get(type).hashCode();
-
+        //return GType.types.get(type).hashCode();
+        return type.hashCode();
         //If we want to be sensitive to difference between double and float , or int and long we will use type.hashCode() instead
     }
 }

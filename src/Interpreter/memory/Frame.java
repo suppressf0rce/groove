@@ -10,7 +10,7 @@ public class Frame {
 
     public Frame(String frame_name, Scope global_scope) {
         this.frame_name = frame_name;
-        this.current_scope = new Scope(current_scope.scope_name + ".scope_00", global_scope);
+        this.current_scope = new Scope(frame_name + ".scope_00", global_scope);
         scopes = new ArrayList<>();
         scopes.add(current_scope);
     }
