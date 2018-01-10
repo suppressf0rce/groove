@@ -126,8 +126,8 @@ public class SemanticAnalyzer implements Visitor {
     }
 
     @Override
-    public void visit(BreakStmt breakStmt) {
-
+    public GType visit(BreakStmt breakStmt) {
+        return null;
     }
 
     @Override
@@ -145,18 +145,20 @@ public class SemanticAnalyzer implements Visitor {
     }
 
     @Override
-    public void visit(CompoundStmt compoundStmt) {
+    public GType visit(CompoundStmt compoundStmt) {
         current_scope = new ScopedSymbolTable(current_scope.name, current_scope.scope_level + 1, current_scope);
 
         for (Node child : compoundStmt.children)
             visit(child);
 
         current_scope = current_scope.enclosing_scope;
+
+        return null;
     }
 
     @Override
-    public void visit(ContinueStmt continueStmt) {
-
+    public GType visit(ContinueStmt continueStmt) {
+        return null;
     }
 
     @Override
@@ -295,10 +297,12 @@ public class SemanticAnalyzer implements Visitor {
     }
 
     @Override
-    public void visit(IfStmt ifStmt) {
+    public GType visit(IfStmt ifStmt) {
         visit(ifStmt.condition);
         visit(ifStmt.tbody);
         visit(ifStmt.fbody);
+
+        return null;
     }
 
     @Override
@@ -311,6 +315,8 @@ public class SemanticAnalyzer implements Visitor {
                 for (Method method : c.getDeclaredMethods()) {
 
                     String type_name = method.getReturnType().getName();
+                    if (type_name.endsWith("String"))
+                        type_name = "string";
                     Symbol type_symbol = current_scope.lookup(type_name, false);
 
                     String function_name = method.getName();
@@ -435,6 +441,25 @@ public class SemanticAnalyzer implements Visitor {
 
     @Override
     public GType visit(UnOp unOp) {
+        if (unOp.prefix) {
+            if (unOp.op.type == TokenType.INT)
+                return new GType("int");
+
+            if (unOp.op.type == TokenType.LONG)
+                return new GType("long");
+
+            if (unOp.op.type == TokenType.FLOAT)
+                return new GType("float");
+
+            if (unOp.op.type == TokenType.DOUBLE)
+                return new GType("double");
+
+            if (unOp.op.type == TokenType.BOOLEAN)
+                return new GType("boolean");
+
+            if (unOp.op.type == TokenType.STRING)
+                error("Can not cast into a string!");
+        }
         return visit(unOp.expr);
     }
 

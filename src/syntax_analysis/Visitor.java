@@ -9,9 +9,12 @@ public interface Visitor {
     public GType visit(Assign assign);
 
     public GType visit(BinOp binOp);
-    public void visit(BreakStmt breakStmt);
-    public void visit(CompoundStmt compoundStmt);
-    public void visit(ContinueStmt continueStmt);
+
+    public GType visit(BreakStmt breakStmt);
+
+    public GType visit(CompoundStmt compoundStmt);
+
+    public GType visit(ContinueStmt continueStmt);
     public void visit(DoWhileStmt doWhileStmt);
 
     public GType visit(Expression expression);
@@ -22,7 +25,8 @@ public interface Visitor {
     public GType visit(FunctionDeclaration functionDeclaration);
 
     public GType visit(FunctionBody compoundStmt);
-    public void visit(IfStmt ifStmt);
+
+    public GType visit(IfStmt ifStmt);
     public void visit(ImportFile importFile);
 
     public GType visit(Node node);

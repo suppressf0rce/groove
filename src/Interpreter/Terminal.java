@@ -32,6 +32,38 @@ public class Terminal extends GType {
         return value;
     }
 
+    public static Terminal toTerminal(String value) {
+        if (value.equals("true")) {
+            return new Terminal("boolean", "true");
+        } else if (value.equals("false")) {
+            return new Terminal("boolean", "false");
+        } else if (isInt(value)) {
+            return new Terminal("int", value);
+        } else if (isDouble(value)) {
+            return new Terminal("double", value);
+        } else {
+            return new Terminal("string", value);
+        }
+    }
+
+    private static boolean isInt(String str) {
+        try {
+            double v = Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException nfe) {
+        }
+        return false;
+    }
+
+    private static boolean isDouble(String str) {
+        try {
+            double v = Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException nfe) {
+        }
+        return false;
+    }
+
     private static Terminal convert(Terminal t, String toType) {
         if (toType.equals("boolean")) {
             if (t.type.equals("boolean"))
@@ -132,7 +164,7 @@ public class Terminal extends GType {
         return Terminal.order[Math.max(left_order, right_order)];
     }
 
-    public Terminal add(Terminal other) throws Exception {
+    public Terminal addT(Terminal other) throws Exception {
         String ttype = getType(other);
         Terminal t1 = convert(this, ttype);
         Terminal t2 = convert(other, ttype);

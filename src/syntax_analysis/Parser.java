@@ -156,6 +156,11 @@ public class Parser implements Cloneable {
         eat(TokenType.BE);
         Type type_node = type_spec();
         int line = lexer.line;
+
+        if (type_node == null) {
+            error("Expected function type but not found at line: " + line);
+        }
+
         FunctionBody body = function_body();
 
         return new FunctionDeclaration(type_node, name, params, body, line);
@@ -173,7 +178,6 @@ public class Parser implements Cloneable {
                 result.addAll(declaration_list());
             } else {
                 result.add(statement());
-                break;
             }
         }
 
@@ -283,7 +287,6 @@ public class Parser implements Cloneable {
                 result.addAll(declaration_list());
             } else {
                 result.add(statement());
-                break;
             }
         }
 
@@ -465,11 +468,12 @@ public class Parser implements Cloneable {
 
     private Node assignment_expression() {
         if (check_assignment_expression()) {
-            Node node = variable();
+            Var node = variable();
+            int line = lexer.line;
             while (current_token.type.toString().endsWith("ASSIGN")) {
                 Token token = current_token;
                 eat(token.type);
-                return new Assign(node, assignment_expression(), token, lexer.line);
+                return new Assign(node, assignment_expression(), token, line);
             }
         }
 
@@ -482,8 +486,9 @@ public class Parser implements Cloneable {
             eat(TokenType.QUESTION_MARK);
             Expression texpression = expression();
             eat(TokenType.COLON);
+            int line = lexer.line;
             Node fexpression =  conditional_expression();
-            return new TerOp(node, texpression, fexpression, lexer.line);
+            return new TerOp(node, texpression, fexpression, line);
         }
         return node;
     }

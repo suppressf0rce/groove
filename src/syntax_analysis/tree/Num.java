@@ -10,5 +10,6 @@ public class Num extends Node {
     public Num(Token token, int line){
         super(line);
         this.token = token;
+        this.value = token.value;
     }
 }

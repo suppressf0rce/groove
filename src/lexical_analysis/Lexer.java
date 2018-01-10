@@ -78,6 +78,8 @@ public class Lexer implements Cloneable{
         RESERVED_KEYWORDS.put("new", new Token(TokenType.NEW, "new"));
         RESERVED_KEYWORDS.put("this", new Token(TokenType.THIS, "this"));
         RESERVED_KEYWORDS.put("end", new Token(TokenType.END, "end"));
+        RESERVED_KEYWORDS.put("and", new Token(TokenType.LOG_AND_OP, "&&"));
+        RESERVED_KEYWORDS.put("or", new Token(TokenType.LOG_OR_OP, "||"));
     }
 
     //Methods
@@ -232,7 +234,7 @@ public class Lexer implements Cloneable{
         while(current_char != '\n' && current_char != null)
             advance();
 
-        while(current_char == '\n')
+        while (current_char != null && current_char == '\n')
             advance();
     }
 

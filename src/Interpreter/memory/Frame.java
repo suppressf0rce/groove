@@ -17,7 +17,7 @@ public class Frame {
 
     public void new_scope() {
         int scopeID = Integer.parseInt(current_scope.scope_name.substring(current_scope.scope_name.length() - 2, current_scope.scope_name.length())) + 1;
-        current_scope = new Scope(current_scope.scope_name.substring(0, current_scope.scope_name.length() - 2) + "" + scopeID, current_scope);
+        current_scope = new Scope(current_scope.scope_name.substring(0, current_scope.scope_name.length() - 2) + String.format("%02d", scopeID), current_scope);
         scopes.add(current_scope);
     }
 
@@ -27,7 +27,7 @@ public class Frame {
         scopes.remove(scopes.size() - 1);
     }
 
-    public boolean contains(String key) {
+    public boolean contains(Object key) {
         return current_scope.contains(key);
     }
 

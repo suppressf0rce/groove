@@ -1,5 +1,7 @@
 package Interpreter.memory;
 
+import Interpreter.Terminal;
+
 import java.util.Random;
 
 public class Memory {
@@ -13,7 +15,7 @@ public class Memory {
     }
 
 
-    public void declare(String key, Object value) {
+    public void declare(Object key, Object value, String type) {
         if (value == null) {
             Double rand = Math.pow(2, 32);
             value = new Random().nextInt(rand.intValue());
@@ -24,10 +26,13 @@ public class Memory {
         } else
             ins_scope = global_frame.current_scope;
 
-        ins_scope.set_item(key, value);
+        if (type != null)
+            ins_scope.set_item(key, new Terminal(type, value.toString()));
+        else
+            ins_scope.set_item(key, value);
     }
 
-    public void set_item(String key, Object value) {
+    public void set_item(Object key, Object value) {
         Scope ins_scope;
         if (stack.current_frame != null) {
             ins_scope = stack.current_frame.current_scope;
@@ -43,7 +48,7 @@ public class Memory {
         ins_scope.set_item(key, value);
     }
 
-    public Object get_item(String item) {
+    public Object get_item(Object item) {
         Scope curr_scope;
         if (stack.current_frame != null) {
             curr_scope = stack.current_frame.current_scope;
