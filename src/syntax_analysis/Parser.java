@@ -397,11 +397,11 @@ public class Parser implements Cloneable {
             eat(TokenType.FOR);
             eat(TokenType.L_PAREN);
             Node setup = expression_statement(false);
-            eat(TokenType.COLON);
+            eat(TokenType.SEMICOLON);
             while (current_token.type == TokenType.EOL)
                 eat(TokenType.EOL);
             Node condition = expression_statement(false);
-            eat(TokenType.COLON);
+            eat(TokenType.SEMICOLON);
             int line = lexer.line;
             while (current_token.type == TokenType.EOL)
                 eat(TokenType.EOL);

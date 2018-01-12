@@ -8,9 +8,13 @@ end
 
 let function main() be void:
 
-    let var be float
-    var = (float)3/2
+    let broj1, broj2 be int
 
-    print(var)
+    broj1 = scanNextInt()
+    broj2 = scanNextInt()
+
+    let rezultat = broj1 + broj2 be long
+
+    print(rezultat)
 end
 //TODO: String functions

@@ -4,6 +4,10 @@ import java.util.Scanner;
 
 public class Console {
 
+
+    private static Scanner scanner = new Scanner(System.in);
+
+
     //STD Out functions
     //------------------------------------------------------------------------------------------------------------------
     public static void print(String line) {
@@ -30,30 +34,38 @@ public class Console {
         System.out.println(line);
     }
 
+    public static void print(char line) {
+        System.out.println(line);
+    }
+
 
     //STD Err functions
     //------------------------------------------------------------------------------------------------------------------
-    public static void eprint(String line) {
+    public static void errprint(String line) {
         System.err.println(line);
     }
 
-    public static void eprint(double line) {
+    public static void errprint(double line) {
         System.err.println(line);
     }
 
-    public static void eprint(long line) {
+    public static void errprint(long line) {
         System.err.println(line);
     }
 
-    public static void eprint(int line) {
+    public static void errprint(int line) {
         System.err.println(line);
     }
 
-    public static void eprint(float line) {
+    public static void errprint(float line) {
         System.err.println(line);
     }
 
-    public static void eprint(boolean line) {
+    public static void errprint(boolean line) {
+        System.err.println(line);
+    }
+
+    public static void errprint(char line) {
         System.err.println(line);
     }
 
@@ -61,27 +73,51 @@ public class Console {
     //STD In functions
     //------------------------------------------------------------------------------------------------------------------
     public static String scanNextLine() {
-        Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
 
+    public static boolean scanNextBoolean() {
+        return scanner.nextBoolean();
+    }
+
     public static int scanNextInt() {
-        Scanner scanner = new Scanner(System.in);
         return scanner.nextInt();
     }
 
     public static long scanNextLong() {
-        Scanner scanner = new Scanner(System.in);
         return scanner.nextLong();
     }
 
     public static float scanNextFloat() {
-        Scanner scanner = new Scanner(System.in);
         return scanner.nextFloat();
     }
 
     public static double scanNextDouble() {
-        Scanner scanner = new Scanner(System.in);
         return scanner.nextDouble();
+    }
+
+    //STD in functions That tells whether there is next scan
+    public static boolean hasNextLine() {
+        return scanner.hasNextLine();
+    }
+
+    public static boolean hasNextBoolean() {
+        return scanner.hasNextBoolean();
+    }
+
+    public static boolean hasNextInt() {
+        return scanner.hasNextInt();
+    }
+
+    public static boolean hasNextLong() {
+        return scanner.hasNextLong();
+    }
+
+    public static boolean hasNextFloat() {
+        return scanner.hasNextFloat();
+    }
+
+    public static boolean hasNextDouble() {
+        return scanner.hasNextDouble();
     }
 }
