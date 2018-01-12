@@ -54,16 +54,10 @@ public class SelectWorkspace extends JDialog {
         this.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SelectWorkspace dialog = new SelectWorkspace();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
-    }
-
     private void onOK() {
-        if (!tfPath.getText().equals("")) {
+        if (!tfPath.getText().equals("") && new File(tfPath.getText()).exists()) {
             Settings.WORKSPACE_PATH = tfPath.getText();
+            MainFrame.getInstance().getExplorerDock().openWorkspace(new File(tfPath.getText()));
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "You have not selected workspace.\n Please select one and try again", "Warrning", JOptionPane.WARNING_MESSAGE);

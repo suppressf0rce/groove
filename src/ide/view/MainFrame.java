@@ -4,7 +4,11 @@ import bibliothek.extension.gui.dock.theme.EclipseTheme;
 import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.CGrid;
 import bibliothek.gui.dock.common.CWorkingArea;
+import bibliothek.gui.dock.common.action.predefined.CCloseAction;
+import bibliothek.gui.dock.common.intern.CDockable;
 import bibliothek.gui.dock.common.theme.ThemeMap;
+import ide.model.project_explorer.GrooveFile;
+import ide.model.project_explorer.OtherFile;
 import ide.view.dock.ConsoleDock;
 import ide.view.dock.EditorDock;
 import ide.view.dock.HidingEclipseThemeConnector;
@@ -12,6 +16,7 @@ import ide.view.dock.ProjectExplorerDock;
 import ide.view.menu.Menu;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
@@ -26,6 +31,8 @@ public class MainFrame extends JFrame {
     private CControl dockingControl;
     private CWorkingArea editorArea;
     private CGrid grid;
+
+    ProjectExplorerDock explorerDock;
 
     /**
      * Default constructor for the MainFrame
@@ -69,30 +76,52 @@ public class MainFrame extends JFrame {
         dockingControl.setTheme(ThemeMap.KEY_ECLIPSE_THEME);
         dockingControl.putProperty(EclipseTheme.THEME_CONNECTOR, new HidingEclipseThemeConnector(dockingControl));
         grid = new CGrid(dockingControl);
+        dockingControl.putProperty(CControl.CLOSE_ACTION_FACTORY, (cControl, cDockable) -> new EditorCloseButton(dockingControl));
+
 
         //Project explorer dock
-        ProjectExplorerDock explorerDock = new ProjectExplorerDock();
+        explorerDock = new ProjectExplorerDock();
         dockingControl.addDockable(explorerDock);
-        grid.add(0, 0, 1, 4, explorerDock);
+        grid.add(0, 0, 1, 1, explorerDock);
 
         //Console dock
         ConsoleDock consoleDock = new ConsoleDock();
         dockingControl.addDockable(consoleDock);
-        grid.add(1, 3, 4, 1, consoleDock);
+        grid.add(0, 3, 4, 1, consoleDock);
 
         //Editor area
         editorArea = dockingControl.createWorkingArea("editorArea");
-        grid.add(1, 1, 3, 3, editorArea);
-
-        //TESTS
-        EditorDock editorDock1 = new EditorDock("Test1", "img/console.png");
-        editorArea.add(editorDock1);
-        editorDock1.setVisible(true);
-        EditorDock editorDock2 = new EditorDock("Test1", "img/console.png");
-        editorArea.add(editorDock2);
-        editorDock2.setVisible(true);
-        editorDock2.toFront();
+        grid.add(1, 0, 3, 3, editorArea);
 
         dockingControl.getContentArea().deploy(grid);
+    }
+
+    public ProjectExplorerDock getExplorerDock() {
+        return explorerDock;
+    }
+
+    public CWorkingArea getEditorArea() {
+        return editorArea;
+    }
+
+    private static class EditorCloseButton extends CCloseAction {
+        public EditorCloseButton(CControl control) {
+            super(control);
+        }
+
+        @Override
+        public void close(CDockable dockable) {
+            super.close(dockable);
+
+            if (dockable instanceof EditorDock) {
+                EditorDock editorDock = (EditorDock) dockable;
+                DefaultMutableTreeNode node = editorDock.getNode();
+
+                if (node instanceof OtherFile)
+                    ((OtherFile) node).setOpened(false);
+                else if (node instanceof GrooveFile)
+                    ((GrooveFile) node).setOpened(false);
+            }
+        }
     }
 }

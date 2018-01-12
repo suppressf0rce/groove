@@ -2,6 +2,7 @@ package ide.control;
 
 import org.fife.ui.autocomplete.BasicCompletion;
 import org.fife.ui.autocomplete.DefaultCompletionProvider;
+import org.fife.ui.autocomplete.ShorthandCompletion;
 
 public class GrooveCompletionProvider extends DefaultCompletionProvider {
 
@@ -55,6 +56,10 @@ public class GrooveCompletionProvider extends DefaultCompletionProvider {
         this.addCompletion(new BasicCompletion(this, "or"));
         this.addCompletion(new BasicCompletion(this, "is"));
         this.addCompletion(new BasicCompletion(this, "not"));
+
+        ShorthandCompletion main = new ShorthandCompletion(this, "main", "let function main() be void:\n\nend");
+        main.setSummary("Groove mandatory main function:\n\n\nlet function main() be void:\n\nend");
+        this.addCompletion(main);
     }
 
 }

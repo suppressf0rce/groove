@@ -5,26 +5,33 @@ import ide.control.GrooveCompletionProvider;
 import ide.control.GrooveFoldParser;
 import ide.model.Colors;
 import ide.model.Settings;
+import ide.model.project_explorer.GrooveFile;
+import ide.model.project_explorer.OtherFile;
+import org.fife.rsta.ac.LanguageSupportFactory;
 import org.fife.ui.autocomplete.AutoCompletion;
 import org.fife.ui.rsyntaxtextarea.*;
 import org.fife.ui.rsyntaxtextarea.folding.FoldParserManager;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class EditorDock extends DefaultMultipleCDockable implements SyntaxConstants {
 
     private RSyntaxTextArea textArea;
     private RTextScrollPane scrollPane;
     private ErrorStrip errorStrip;
+    private DefaultMutableTreeNode node;
+    private File file;
 
-    public EditorDock(String title, String imagePath) {
+    public EditorDock(String title, DefaultMutableTreeNode node) {
         super(null);
+        this.node = node;
 
         setTitleText(title);
-        ImageIcon imageIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getClassLoader().getResource(imagePath)));
-        setTitleIcon(imageIcon);
 
         setCloseable(true);
         setExternalizable(false);
@@ -33,11 +40,306 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
         scrollPane = new RTextScrollPane(textArea);
 
         initializeTextArea();
-        installHighlighting();
         changeStyle();
 
         setLayout(new BorderLayout());
         add(scrollPane, BorderLayout.CENTER);
+
+        if (node instanceof GrooveFile) {
+            installHighlighting();
+            setTitleIcon(((GrooveFile) node).getIcon());
+            file = ((GrooveFile) node).getFile();
+
+            Scanner scan = null;
+            try {
+                scan = new Scanner(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            if (scan != null) {
+                scan.useDelimiter("\\Z");
+                String content = scan.next();
+                textArea.setText(content);
+            }
+        } else if (node instanceof OtherFile) {
+            setTitleIcon(((OtherFile) node).getIcon());
+            file = ((OtherFile) node).getFile();
+
+            installOtherHighlighting(file.getName());
+        }
+    }
+
+    private void installOtherHighlighting(String name) {
+
+        LanguageSupportFactory.get().register(textArea);
+
+        //ActionScript
+        if (name.toLowerCase().endsWith(".actionscript")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_ACTIONSCRIPT);
+        }
+
+        //Asm
+        else if (name.toLowerCase().endsWith(".asm")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86);
+        }
+
+        //BBCode
+        else if (name.toLowerCase().endsWith(".phpBB")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_BBCODE);
+        }
+
+        //C
+        else if (name.toLowerCase().endsWith(".c")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
+        }
+
+        //H
+        else if (name.toLowerCase().endsWith(".h")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
+        }
+
+        //CLojure
+        else if (name.toLowerCase().endsWith(".clj")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_CLOJURE);
+        }
+
+        //C++
+        else if (name.toLowerCase().endsWith(".cpp")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS);
+        }
+
+        //C#
+        else if (name.toLowerCase().endsWith(".cs")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_CSHARP);
+        }
+
+        //CSS
+        else if (name.toLowerCase().endsWith(".css")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_CSS);
+        }
+
+        //D
+        else if (name.toLowerCase().endsWith(".d")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_D);
+        }
+
+        //Dart
+        else if (name.toLowerCase().endsWith(".dart")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_DART);
+        }
+
+        //Delphi group project
+        else if (name.toLowerCase().endsWith(".groupproj")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_DELPHI);
+        }
+
+        //Delphi Project
+        else if (name.toLowerCase().endsWith(".dproj")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_DELPHI);
+        }
+
+        //Delphi Project
+        else if (name.toLowerCase().endsWith(".dpr")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_DELPHI);
+        }
+
+        //Dockerfile
+        else if (name.toLowerCase().contains("dockerfile")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_DOCKERFILE);
+        }
+
+        //DTD
+        else if (name.toLowerCase().endsWith(".dtd")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_DTD);
+        }
+
+        //Fortran
+        else if (name.toLowerCase().endsWith(".f")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_FORTRAN);
+        }
+
+        //Fortran
+        else if (name.toLowerCase().endsWith(".f90")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_DTD);
+        }
+
+        //Groovy
+        else if (name.toLowerCase().endsWith(".groovy")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_GROOVY);
+        }
+
+        //Hosts
+        else if (name.toLowerCase().endsWith(".hosts")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HOSTS);
+        }
+
+        //Htaccess
+        else if (name.toLowerCase().endsWith(".htaccess")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTACCESS);
+        }
+
+        //HTML
+        else if (name.toLowerCase().endsWith(".html")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
+        }
+
+        //INI
+        else if (name.toLowerCase().endsWith(".ini")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_INI);
+        }
+
+        //Java
+        else if (name.toLowerCase().endsWith(".java")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+        }
+
+        //JavaScript
+        else if (name.toLowerCase().endsWith(".js")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+        }
+
+        //JSON
+        else if (name.toLowerCase().endsWith(".json")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
+        }
+
+        //Jshintrc (Jason with comments)
+        else if (name.toLowerCase().endsWith(".jshintrc")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON_WITH_COMMENTS);
+        }
+
+        //JSP
+        else if (name.toLowerCase().endsWith(".jsp")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSP);
+        }
+
+        //Latex
+        else if (name.toLowerCase().endsWith(".tex")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LATEX);
+        }
+
+        //LESS
+        else if (name.toLowerCase().endsWith(".less")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LESS);
+        }
+
+        //Lisp
+        else if (name.toLowerCase().endsWith(".lsp")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LISP);
+        }
+
+        //LUA
+        else if (name.toLowerCase().endsWith(".lua")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LUA);
+        }
+
+        //Makefile
+        else if (name.toLowerCase().endsWith(".make")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_MAKEFILE);
+        }
+
+        //Makefile
+        else if (name.toLowerCase().endsWith(".mk")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_MAKEFILE);
+        }
+
+        //Makefile
+        else if (name.toLowerCase().endsWith(".gmk")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_MAKEFILE);
+        }
+
+        //MXML
+        else if (name.toLowerCase().endsWith(".mxml")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_MXML);
+        }
+
+        //NSIS
+        else if (name.toLowerCase().endsWith(".nsi")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NSIS);
+        }
+
+        //Perl
+        else if (name.toLowerCase().endsWith(".pl")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_PERL);
+        }
+
+        //PHP
+        else if (name.toLowerCase().endsWith(".php")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_PHP);
+        }
+
+        //Properties
+        else if (name.toLowerCase().endsWith(".properties")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_PROPERTIES_FILE);
+        }
+
+        //Python
+        else if (name.toLowerCase().endsWith(".py")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_PYTHON);
+        }
+
+        //Ruby
+        else if (name.toLowerCase().endsWith(".rb")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_RUBY);
+        }
+
+        //SAS
+        else if (name.toLowerCase().endsWith(".sas")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SAS);
+        }
+
+        //Scala
+        else if (name.toLowerCase().endsWith(".scala")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA);
+        }
+
+        //SQL
+        else if (name.toLowerCase().endsWith(".sql")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
+        }
+
+        //TCL
+        else if (name.toLowerCase().endsWith(".tcl")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_TCL);
+        }
+
+        //TypeScript
+        else if (name.toLowerCase().endsWith(".ts")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_TYPESCRIPT);
+        }
+
+        //Shell
+        else if (name.toLowerCase().endsWith(".sh")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_UNIX_SHELL);
+        }
+
+        //VisualBasic
+        else if (name.toLowerCase().endsWith(".vb")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_VISUAL_BASIC);
+        }
+
+        //Batch
+        else if (name.toLowerCase().endsWith(".bat")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_WINDOWS_BATCH);
+        }
+
+        //XML
+        else if (name.toLowerCase().endsWith(".xml")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
+        }
+
+        //YAML
+        else if (name.toLowerCase().endsWith(".yaml")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_YAML);
+        }
+
+        //YAML
+        else if (name.toLowerCase().endsWith(".yml")) {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_YAML);
+        } else {
+            textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
+        }
+
     }
 
     private void initializeTextArea() {
@@ -56,12 +358,13 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
         textArea.setAutoIndentEnabled(true);
         textArea.setCodeFoldingEnabled(true);
         RSyntaxTextArea.setTemplatesEnabled(true);
+        textArea.setHyperlinksEnabled(true);
+        textArea.setDragEnabled(true);
+        textArea.setMarginLineEnabled(true);
+        textArea.setMarginLineColor(Colors.GUTTER_FOREGROUND);
+        textArea.setMarginLinePosition(125);
 
         //textArea.setMarkOccurrences(true);
-
-
-        AutoCompletion ac = new AutoCompletion(new GrooveCompletionProvider());
-        ac.install(textArea);
 
     }
 
@@ -70,6 +373,9 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
         atmf.putMapping("text/Groove", "ide.control.GrooveTokenMaker");
         FoldParserManager.get().addFoldParserMapping("text/Groove", new GrooveFoldParser(true, false));
         textArea.setSyntaxEditingStyle("text/Groove");
+
+        AutoCompletion ac = new AutoCompletion(new GrooveCompletionProvider());
+        ac.install(textArea);
     }
 
     private void changeStyle() {
@@ -119,5 +425,7 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
         scrollPane.revalidate();
     }
 
-
+    public DefaultMutableTreeNode getNode() {
+        return node;
+    }
 }
