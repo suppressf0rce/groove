@@ -1,7 +1,12 @@
 package ide.view.toolbar;
 
+import ide.control.menu.SaveAllAction;
 import ide.control.toolbar.BlockComboListener;
 import ide.model.Colors;
+import ide.model.Configuration;
+import ide.model.project_explorer.GrooveFile;
+import ide.view.MainFrame;
+import ide.view.dock.EditorDock;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -12,6 +17,8 @@ import java.awt.event.MouseListener;
 public class ToolBar extends JToolBar {
 
     private JComboBox<Object> buildConfigurations;
+
+    private Configuration activeConfiguration;
 
     public ToolBar() {
 
@@ -33,6 +40,30 @@ public class ToolBar extends JToolBar {
 
         JButton runButton = new JButton();
         flatternButton(runButton);
+        runButton.addActionListener(actionEvent -> {
+
+            if (buildConfigurations.getSelectedItem() instanceof Configuration) {
+                new SaveAllAction().actionPerformed(actionEvent);
+                try {
+                    ((Configuration) buildConfigurations.getSelectedItem()).run();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(MainFrame.getInstance(), "An error has occurred when trying to execute the code \nMore info: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                if (MainFrame.getInstance().getDockingControl().getFocusedCDockable() instanceof EditorDock) {
+                    if (((EditorDock) MainFrame.getInstance().getDockingControl().getFocusedCDockable()).getNode() instanceof GrooveFile) {
+                        new SaveAllAction().actionPerformed(actionEvent);
+                        activeConfiguration = new Configuration("Temporary Configuration");
+                        activeConfiguration.setFile(((GrooveFile) ((EditorDock) MainFrame.getInstance().getDockingControl().getFocusedCDockable()).getNode()).getFile());
+                        try {
+                            activeConfiguration.run();
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(MainFrame.getInstance(), "An error has occurred when trying to execute the code \nMore info: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            }
+        });
         runButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/run.png"))));
         add(runButton);
 
@@ -43,6 +74,10 @@ public class ToolBar extends JToolBar {
 
         JButton stopButton = new JButton();
         flatternButton(stopButton);
+        stopButton.addActionListener(actionEvent -> {
+            if (activeConfiguration != null)
+                activeConfiguration.stop();
+        });
         stopButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/stop.png"))));
         add(stopButton);
 

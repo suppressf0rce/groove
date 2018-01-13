@@ -135,7 +135,7 @@ public class Lexer implements Cloneable{
      * Skip all whitespaces between tokens from input
      */
     private void skip_whitespace(){
-        while(Character.isSpaceChar(current_char)){
+        while (current_char != null && (Character.isSpaceChar(current_char) || current_char == '\t')) {
             advance();
         }
     }
@@ -273,7 +273,7 @@ public class Lexer implements Cloneable{
                 return new Token(TokenType.EOL, "\n");
             }
 
-            if(Character.isSpaceChar(current_char)){
+            if (Character.isSpaceChar(current_char) || current_char == '\t') {
                 skip_whitespace();
                 continue;
             }

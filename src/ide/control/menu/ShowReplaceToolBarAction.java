@@ -26,7 +26,7 @@ public class ShowReplaceToolBarAction extends AbstractAction {
                 ((EditorDock) dockable).getCsp().hideBottomComponent();
             } else {
                 ((EditorDock) dockable).getCsp().addBottomComponent(((EditorDock) dockable).getReplaceToolBar());
-                ((EditorDock) dockable).getCsp().showBottomComponent(((EditorDock) dockable).getFindToolBar());
+                ((EditorDock) dockable).getCsp().showBottomComponent(((EditorDock) dockable).getReplaceToolBar());
             }
         }
     }

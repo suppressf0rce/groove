@@ -1,3 +1,5 @@
+package main;
+
 import Interpreter.Interpreter;
 import com.bulenkov.darcula.DarculaLaf;
 import ide.view.MainFrame;

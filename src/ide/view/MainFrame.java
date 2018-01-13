@@ -32,6 +32,7 @@ public class MainFrame extends JFrame {
     private ToolBar toolBar;
 
     private CControl dockingControl;
+    private ConsoleDock consoleDock;
     private CWorkingArea editorArea;
     private CGrid grid;
 
@@ -96,7 +97,7 @@ public class MainFrame extends JFrame {
         grid.add(0, 0, 1, 1, explorerDock);
 
         //Console dock
-        ConsoleDock consoleDock = new ConsoleDock();
+        consoleDock = new ConsoleDock();
         dockingControl.addDockable(consoleDock);
         grid.add(0, 3, 4, 1, consoleDock);
 
@@ -149,5 +150,9 @@ public class MainFrame extends JFrame {
                 }
             }
         }
+    }
+
+    public ConsoleDock getConsoleDock() {
+        return consoleDock;
     }
 }

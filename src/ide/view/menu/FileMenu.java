@@ -1,9 +1,6 @@
 package ide.view.menu;
 
-import ide.control.menu.CreateNewGrooveFileAction;
-import ide.control.menu.CreateNewOtherFileAction;
-import ide.control.menu.CreateNewPackageAction;
-import ide.control.menu.CreateNewProjectAction;
+import ide.control.menu.*;
 
 import javax.swing.*;
 
@@ -27,5 +24,8 @@ public class FileMenu extends JMenu {
         newMenu.add(new CreateNewOtherFileAction());
         //NewPackage
         newMenu.add(new CreateNewPackageAction());
+
+        addSeparator();
+        add(new SaveAllAction());
     }
 }
