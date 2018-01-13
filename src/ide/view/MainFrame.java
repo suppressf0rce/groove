@@ -15,6 +15,7 @@ import ide.view.dock.EditorDock;
 import ide.view.dock.HidingEclipseThemeConnector;
 import ide.view.dock.ProjectExplorerDock;
 import ide.view.menu.Menu;
+import ide.view.toolbar.ToolBar;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -70,6 +71,8 @@ public class MainFrame extends JFrame {
 
     private void initialize() {
 
+        setLayout(new BorderLayout());
+
         //Toolbar
         toolBar = new ToolBar();
         add(toolBar, BorderLayout.PAGE_START);
@@ -80,8 +83,7 @@ public class MainFrame extends JFrame {
 
         //Docking system
         dockingControl = new CControl(this);
-        setLayout(new GridLayout(1, 1));
-        add(dockingControl.getContentArea());
+        add(dockingControl.getContentArea(), BorderLayout.CENTER);
         dockingControl.setTheme(ThemeMap.KEY_ECLIPSE_THEME);
         dockingControl.putProperty(EclipseTheme.THEME_CONNECTOR, new HidingEclipseThemeConnector(dockingControl));
         grid = new CGrid(dockingControl);
