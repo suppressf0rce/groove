@@ -1,36 +1,53 @@
 package ide.view.dock;
 
 import bibliothek.gui.dock.common.DefaultMultipleCDockable;
+import ide.control.FileWorker;
 import ide.control.GrooveCompletionProvider;
 import ide.control.GrooveFoldParser;
+import ide.control.TextChangeListener;
 import ide.model.Colors;
 import ide.model.Settings;
 import ide.model.project_explorer.GrooveFile;
 import ide.model.project_explorer.OtherFile;
+import ide.view.MainFrame;
 import org.fife.rsta.ac.LanguageSupportFactory;
+import org.fife.rsta.ui.CollapsibleSectionPanel;
+import org.fife.rsta.ui.SizeGripIcon;
+import org.fife.rsta.ui.search.*;
 import org.fife.ui.autocomplete.AutoCompletion;
 import org.fife.ui.rsyntaxtextarea.*;
 import org.fife.ui.rsyntaxtextarea.folding.FoldParserManager;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.fife.ui.rtextarea.SearchContext;
+import org.fife.ui.rtextarea.SearchEngine;
+import org.fife.ui.rtextarea.SearchResult;
 
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.nio.charset.Charset;
 
-public class EditorDock extends DefaultMultipleCDockable implements SyntaxConstants {
+public class EditorDock extends DefaultMultipleCDockable implements SyntaxConstants, SearchListener {
 
+    private CollapsibleSectionPanel csp;
     private RSyntaxTextArea textArea;
     private RTextScrollPane scrollPane;
     private ErrorStrip errorStrip;
     private DefaultMutableTreeNode node;
     private File file;
+    private StatusBar statusBar;
+
+    private FindDialog findDialog;
+    private ReplaceDialog replaceDialog;
+    private FindToolBar findToolBar;
+    private ReplaceToolBar replaceToolBar;
 
     public EditorDock(String title, DefaultMutableTreeNode node) {
         super(null);
         this.node = node;
 
+        initSearchDialogs();
         setTitleText(title);
 
         setCloseable(true);
@@ -38,35 +55,59 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
 
         textArea = new RSyntaxTextArea();
         scrollPane = new RTextScrollPane(textArea);
+        csp = new CollapsibleSectionPanel();
+        csp.add(scrollPane);
+
+        statusBar = new StatusBar();
+        add(statusBar, BorderLayout.SOUTH);
 
         initializeTextArea();
         changeStyle();
 
         setLayout(new BorderLayout());
-        add(scrollPane, BorderLayout.CENTER);
+        add(csp, BorderLayout.CENTER);
 
         if (node instanceof GrooveFile) {
             installHighlighting();
             setTitleIcon(((GrooveFile) node).getIcon());
             file = ((GrooveFile) node).getFile();
 
-            Scanner scan = null;
-            try {
-                scan = new Scanner(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            if (scan != null) {
-                scan.useDelimiter("\\Z");
-                String content = scan.next();
-                textArea.setText(content);
-            }
+
+            String content = FileWorker.readFile(file, Charset.defaultCharset());
+            textArea.setText(content);
+
+            textArea.getDocument().addDocumentListener(new TextChangeListener(node));
+
         } else if (node instanceof OtherFile) {
             setTitleIcon(((OtherFile) node).getIcon());
             file = ((OtherFile) node).getFile();
 
             installOtherHighlighting(file.getName());
+
+            String content = FileWorker.readFile(file, Charset.defaultCharset());
+            textArea.setText(content);
+
+            textArea.getDocument().addDocumentListener(new TextChangeListener(node));
         }
+    }
+
+    public void initSearchDialogs() {
+
+        findDialog = new FindDialog(MainFrame.getInstance(), this);
+        replaceDialog = new ReplaceDialog(MainFrame.getInstance(), this);
+
+        // This ties the properties of the two dialogs together (match case,
+        // regex, etc.).
+        SearchContext context = findDialog.getSearchContext();
+        replaceDialog.setSearchContext(context);
+
+
+        // Create tool bars and tie their search contexts together also.
+        findToolBar = new FindToolBar(this);
+        findToolBar.setSearchContext(context);
+        replaceToolBar = new ReplaceToolBar(this);
+        replaceToolBar.setSearchContext(context);
+
     }
 
     private void installOtherHighlighting(String name) {
@@ -343,7 +384,7 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
     }
 
     private void initializeTextArea() {
-
+        //TODO: Fix Spelling checker
 //        File file = new File(getClass().getClassLoader().getResource("english_dic.zip").getPath());
 //        try {
 //            //textArea.addParser(SpellingParser.createEnglishSpellingParser(file,true));
@@ -352,6 +393,7 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
 //        }
 
         errorStrip = new ErrorStrip(textArea);
+        add(errorStrip, BorderLayout.LINE_END);
         textArea.setAnimateBracketMatching(true);
         textArea.setLineWrap(true);
         textArea.setAntiAliasingEnabled(true);
@@ -376,6 +418,8 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
 
         AutoCompletion ac = new AutoCompletion(new GrooveCompletionProvider());
         ac.install(textArea);
+
+        //TODO: Added custom parser for text editor 1 day sigh...
     }
 
     private void changeStyle() {
@@ -427,5 +471,97 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
 
     public DefaultMutableTreeNode getNode() {
         return node;
+    }
+
+    public RSyntaxTextArea getTextArea() {
+        return textArea;
+    }
+
+    public FindDialog getFindDialog() {
+        return findDialog;
+    }
+
+    public ReplaceDialog getReplaceDialog() {
+        return replaceDialog;
+    }
+
+    public CollapsibleSectionPanel getCsp() {
+        return csp;
+    }
+
+    public FindToolBar getFindToolBar() {
+        return findToolBar;
+    }
+
+    public ReplaceToolBar getReplaceToolBar() {
+        return replaceToolBar;
+    }
+
+    @Override
+    public void searchEvent(SearchEvent e) {
+        SearchEvent.Type type = e.getType();
+        SearchContext context = e.getSearchContext();
+        SearchResult result = null;
+
+        switch (type) {
+            default: // Prevent FindBugs warning later
+            case MARK_ALL:
+                result = SearchEngine.markAll(textArea, context);
+                break;
+            case FIND:
+                result = SearchEngine.find(textArea, context);
+                if (!result.wasFound()) {
+                    UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+                }
+                break;
+            case REPLACE:
+                result = SearchEngine.replace(textArea, context);
+                if (!result.wasFound()) {
+                    UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+                }
+                break;
+            case REPLACE_ALL:
+                result = SearchEngine.replaceAll(textArea, context);
+                JOptionPane.showMessageDialog(null, result.getCount() +
+                        " occurrences replaced.");
+                break;
+        }
+
+        String text = null;
+        if (result.wasFound()) {
+            text = "Text found; occurrences marked: " + result.getMarkedCount();
+        } else if (type == SearchEvent.Type.MARK_ALL) {
+            if (result.getMarkedCount() > 0) {
+                text = "Occurrences marked: " + result.getMarkedCount();
+            } else {
+                text = "";
+            }
+        } else {
+            text = "Text not found";
+        }
+        statusBar.setLabel(text);
+    }
+
+    @Override
+    public String getSelectedText() {
+        return textArea.getSelectedText();
+    }
+
+
+    private static class StatusBar extends JPanel {
+
+        private JLabel label;
+
+        public StatusBar() {
+            label = new JLabel("Ready");
+            setLayout(new BorderLayout());
+            add(label, BorderLayout.LINE_START);
+            add(new JLabel(new SizeGripIcon()), BorderLayout.LINE_END);
+        }
+
+        public void setLabel(String label) {
+            this.label.setText(label);
+        }
+
     }
 }

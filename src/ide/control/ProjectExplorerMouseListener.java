@@ -40,12 +40,12 @@ public class ProjectExplorerMouseListener extends MouseAdapter {
 
             if (node instanceof GrooveFile) {
                 GrooveFile grooveFile = (GrooveFile) node;
-                FileOpener.open(grooveFile);
+                FileWorker.open(grooveFile);
             }
 
             if (node instanceof OtherFile) {
                 OtherFile otherFile = (OtherFile) node;
-                FileOpener.open(otherFile);
+                FileWorker.open(otherFile);
             }
         }
     }

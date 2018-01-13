@@ -12,11 +12,14 @@ public class OtherFile extends DefaultMutableTreeNode {
     private String name;
     private ImageIcon icon;
 
+    private boolean changed;
+
     public OtherFile(File file) {
         this.file = file;
         name = file.getName();
         icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/file.png")));
         opened = false;
+        changed = false;
     }
 
     @Override
@@ -38,5 +41,13 @@ public class OtherFile extends DefaultMutableTreeNode {
 
     public void setOpened(boolean opened) {
         this.opened = opened;
+    }
+
+    public boolean isChanged() {
+        return changed;
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 }

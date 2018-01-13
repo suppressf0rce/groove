@@ -5,6 +5,8 @@ import javax.swing.*;
 public class Menu extends JMenuBar {
 
     private FileMenu fileMenu;
+    private EditMenu editMenu;
+    private ViewMenu viewMenu;
 
     /**
      * Default constructor of menu class
@@ -20,6 +22,12 @@ public class Menu extends JMenuBar {
 
         fileMenu = new FileMenu();
         this.add(fileMenu);
+
+        editMenu = new EditMenu();
+        this.add(editMenu);
+
+        viewMenu = new ViewMenu();
+        this.add(viewMenu);
 
     }
 

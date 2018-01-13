@@ -32,7 +32,6 @@ public class Lexer implements Cloneable{
         RESERVED_KEYWORDS = new HashMap<>();
 
         //Initializing HashMap of the keywords
-        //TODO: Add keywords
         RESERVED_KEYWORDS.put("void", new Token(TokenType.VOID, "void"));
         RESERVED_KEYWORDS.put("boolean", new Token(TokenType.BOOLEAN, "boolean"));
         RESERVED_KEYWORDS.put("int", new Token(TokenType.INT, "int"));

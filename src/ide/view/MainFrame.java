@@ -7,6 +7,7 @@ import bibliothek.gui.dock.common.CWorkingArea;
 import bibliothek.gui.dock.common.action.predefined.CCloseAction;
 import bibliothek.gui.dock.common.intern.CDockable;
 import bibliothek.gui.dock.common.theme.ThemeMap;
+import ide.control.FileWorker;
 import ide.model.project_explorer.GrooveFile;
 import ide.model.project_explorer.OtherFile;
 import ide.view.dock.ConsoleDock;
@@ -40,8 +41,6 @@ public class MainFrame extends JFrame {
     private MainFrame() {
         setTitle("Groove IDE");
 
-        initialize();
-
         //Setting up the window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
@@ -57,10 +56,15 @@ public class MainFrame extends JFrame {
      * @return
      */
     public static MainFrame getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new MainFrame();
+            instance.initialize();
+        }
 
         return instance;
+
+        //TODO: Add functionality of saving all the files
+        //TODO: Add functionality of the edit system (cut & copy & paste & undo & redo)
     }
 
     private void initialize() {
@@ -96,6 +100,10 @@ public class MainFrame extends JFrame {
         dockingControl.getContentArea().deploy(grid);
     }
 
+    public CControl getDockingControl() {
+        return dockingControl;
+    }
+
     public ProjectExplorerDock getExplorerDock() {
         return explorerDock;
     }
@@ -111,16 +119,15 @@ public class MainFrame extends JFrame {
 
         @Override
         public void close(CDockable dockable) {
-            super.close(dockable);
-
             if (dockable instanceof EditorDock) {
                 EditorDock editorDock = (EditorDock) dockable;
                 DefaultMutableTreeNode node = editorDock.getNode();
 
-                if (node instanceof OtherFile)
-                    ((OtherFile) node).setOpened(false);
-                else if (node instanceof GrooveFile)
-                    ((GrooveFile) node).setOpened(false);
+                if (node instanceof OtherFile) {
+                    FileWorker.close((OtherFile) node, editorDock);
+                } else if (node instanceof GrooveFile) {
+                    FileWorker.close((GrooveFile) node, editorDock);
+                }
             }
         }
     }

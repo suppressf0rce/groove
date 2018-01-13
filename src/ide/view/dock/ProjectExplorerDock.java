@@ -2,7 +2,9 @@ package ide.view.dock;
 
 import bibliothek.gui.dock.common.CLocation;
 import ide.control.ProjectExplorerMouseListener;
+import ide.model.project_explorer.Project;
 import ide.model.project_explorer.Workspace;
+import ide.view.MainFrame;
 import ide.view.ProjectExplorerTreeCellRenderer;
 
 import javax.swing.*;
@@ -12,7 +14,7 @@ import java.io.File;
 
 public class ProjectExplorerDock extends DockingWindow {
 
-    Workspace workspace;
+    private Workspace workspace;
     private JTree workspaceTree;
 
     public ProjectExplorerDock() {
@@ -27,6 +29,11 @@ public class ProjectExplorerDock extends DockingWindow {
 
         setLayout(new BorderLayout());
         add(workspaceTree, BorderLayout.CENTER);
+
+        //TODO: Add functionality of creating the new projects
+        //TODO: Add functionality of creating the new files
+        //TODO: Add functionality of creating the new packages
+        //TODO: Add functionality of deleting the files
     }
 
     public void openWorkspace(File file) {
@@ -42,6 +49,27 @@ public class ProjectExplorerDock extends DockingWindow {
         if (workspace.isOpened()) {
             workspace.closeWorkspace();
             workspaceTree.revalidate();
+            ((DefaultTreeModel) workspaceTree.getModel()).reload();
+            workspace = null;
+        }
+    }
+
+    public void createProject(Project project) {
+        if (workspace == null)
+            JOptionPane.showMessageDialog(MainFrame.getInstance(), "There is no active workspaces in IDE! \nPlease open a workspace and try again", "Error", JOptionPane.ERROR_MESSAGE);
+        else {
+            File dir = new File(workspace.getFile().getAbsolutePath() + File.separator + project.getName());
+
+            // attempt to create the directory here
+            boolean successful = dir.mkdir();
+            if (successful) {
+                project.setFile(dir);
+                workspace.add(project);
+                workspaceTree.revalidate();
+                ((DefaultTreeModel) workspaceTree.getModel()).reload();
+            } else {
+                JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not create project directory! \nPlease try again", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 

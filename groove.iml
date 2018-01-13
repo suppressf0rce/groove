@@ -17,5 +17,6 @@
     <orderEntry type="library" name="spellchecker-2.6.0" level="project" />
     <orderEntry type="library" name="autocomplete-2.6.1" level="project" />
     <orderEntry type="library" name="languagesupport-2.6.0" level="project" />
+    <orderEntry type="library" name="rstaui-2.6.1" level="project" />
   </component>
 </module>

@@ -21,6 +21,12 @@ public class Project extends DefaultMutableTreeNode {
         icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/project-explorer.png")));
     }
 
+    public Project() {
+        opened = false;
+
+        icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/project-explorer.png")));
+    }
+
     @SuppressWarnings("Duplicates")
     public void openProject() {
         opened = true;
@@ -61,5 +67,21 @@ public class Project extends DefaultMutableTreeNode {
 
     public boolean isOpened() {
         return opened;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

@@ -7,10 +7,11 @@ import java.io.File;
 
 public class GrooveFile extends DefaultMutableTreeNode {
 
-    boolean opened;
+    private boolean opened;
     private File file;
     private String name;
     private ImageIcon icon;
+    private boolean changed;
 
     public GrooveFile(File file) {
         this.file = file;
@@ -18,6 +19,7 @@ public class GrooveFile extends DefaultMutableTreeNode {
         icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/groove_file.png")));
 
         opened = false;
+        changed = false;
     }
 
     @Override
@@ -39,5 +41,13 @@ public class GrooveFile extends DefaultMutableTreeNode {
 
     public File getFile() {
         return file;
+    }
+
+    public boolean isChanged() {
+        return changed;
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 }
