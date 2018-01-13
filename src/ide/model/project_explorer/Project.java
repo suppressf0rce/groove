@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 @SuppressWarnings("Duplicates")
-public class Project extends DefaultMutableTreeNode {
+public class Project extends DefaultMutableTreeNode implements Renameable, Deleteable {
 
     private File file;
     private String name;
@@ -122,5 +122,22 @@ public class Project extends DefaultMutableTreeNode {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    @Override
+    public void rename(String newName) {
+        if (newName.contains("."))
+            newName = newName.split("\\.")[0];
+        File newFile = new File(file.getParentFile().getAbsolutePath() + File.separator + newName);
+        if (!file.renameTo(newFile)) {
+            JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not rename project", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.name = newName;
+    }
+
+    @Override
+    public void delete() {
+        file.delete();
+        removeFromParent();
     }
 }

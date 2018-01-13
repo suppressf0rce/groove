@@ -30,8 +30,6 @@ public class ProjectExplorerDock extends DockingWindow {
         setLayout(new BorderLayout());
         add(workspaceTree, BorderLayout.CENTER);
 
-        //TODO: Add functionality of creating the new files
-        //TODO: Add functionality of creating the new packages
         //TODO: Add functionality of deleting the files
     }
 

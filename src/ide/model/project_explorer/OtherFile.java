@@ -1,11 +1,13 @@
 package ide.model.project_explorer;
 
+import ide.view.MainFrame;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.io.File;
 
-public class OtherFile extends DefaultMutableTreeNode {
+public class OtherFile extends DefaultMutableTreeNode implements Renameable, Deleteable {
 
     boolean opened;
     private File file;
@@ -67,5 +69,20 @@ public class OtherFile extends DefaultMutableTreeNode {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public void rename(String newName) {
+        File newFile = new File(file.getParentFile().getAbsolutePath() + File.separator + newName);
+        if (!file.renameTo(newFile)) {
+            JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not rename file", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.name = newName;
+    }
+
+    @Override
+    public void delete() {
+        file.delete();
+        removeFromParent();
     }
 }

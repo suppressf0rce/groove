@@ -11,7 +11,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 
 @SuppressWarnings("Duplicates")
-public class Package extends DefaultMutableTreeNode {
+public class Package extends DefaultMutableTreeNode implements Renameable, Deleteable {
 
     private File file;
     private String name;
@@ -131,5 +131,22 @@ public class Package extends DefaultMutableTreeNode {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    @Override
+    public void rename(String newName) {
+        if (newName.contains("."))
+            newName = newName.split("\\.")[0];
+        File newFile = new File(file.getParentFile().getAbsolutePath() + File.separator + newName);
+        if (!file.renameTo(newFile)) {
+            JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not rename package", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.name = newName;
+    }
+
+    @Override
+    public void delete() {
+        file.delete();
+        removeFromParent();
     }
 }

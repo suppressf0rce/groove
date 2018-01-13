@@ -28,6 +28,7 @@ public class MainFrame extends JFrame {
     private static MainFrame instance = null;
 
     private ide.view.menu.Menu menu;
+    private ToolBar toolBar;
 
     private CControl dockingControl;
     private CWorkingArea editorArea;
@@ -68,6 +69,10 @@ public class MainFrame extends JFrame {
     }
 
     private void initialize() {
+
+        //Toolbar
+        toolBar = new ToolBar();
+        add(toolBar, BorderLayout.PAGE_START);
 
         //Menu
         menu = new Menu();

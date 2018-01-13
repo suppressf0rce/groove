@@ -1,11 +1,13 @@
 package ide.model.project_explorer;
 
+import ide.view.MainFrame;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.io.File;
 
-public class GrooveFile extends DefaultMutableTreeNode {
+public class GrooveFile extends DefaultMutableTreeNode implements Renameable, Deleteable {
 
     private boolean opened;
     private File file;
@@ -69,4 +71,22 @@ public class GrooveFile extends DefaultMutableTreeNode {
     public void setFile(File file) {
         this.file = file;
     }
+
+    @Override
+    public void rename(String newName) {
+        if (!newName.endsWith(".gr"))
+            newName += ".gr";
+        File newFile = new File(file.getParentFile().getAbsolutePath() + File.separator + newName);
+        if (!file.renameTo(newFile)) {
+            JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not rename Groove", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.name = newName;
+    }
+
+    @Override
+    public void delete() {
+        file.delete();
+        removeFromParent();
+    }
+
 }
