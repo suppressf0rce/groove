@@ -23,7 +23,7 @@ public class FileWorker {
             editorDock.setVisible(true);
             editorDock.toFront();
         } else {
-            JOptionPane.showMessageDialog(MainFrame.getInstance(), "File already opened in editor", "Warning", JOptionPane.WARNING_MESSAGE);
+            MainFrame.getInstance().focusNode(grooveFile);
         }
     }
 
@@ -37,7 +37,7 @@ public class FileWorker {
                 editorDock.setVisible(true);
                 editorDock.toFront();
             } else {
-                JOptionPane.showMessageDialog(MainFrame.getInstance(), "File already opened in editor", "Warning", JOptionPane.WARNING_MESSAGE);
+                MainFrame.getInstance().focusNode(otherFile);
             }
         }
     }

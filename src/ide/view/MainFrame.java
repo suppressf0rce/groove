@@ -112,6 +112,18 @@ public class MainFrame extends JFrame {
         return editorArea;
     }
 
+    public void focusNode(DefaultMutableTreeNode node) {
+        for (int i = 0; i < dockingControl.getCDockableCount(); i++) {
+            CDockable dockable = dockingControl.getCDockable(i);
+
+            if (dockable instanceof EditorDock) {
+                if (((EditorDock) dockable).getNode() == node) {
+                    ((EditorDock) dockable).toFront();
+                }
+            }
+        }
+    }
+
     private static class EditorCloseButton extends CCloseAction {
         public EditorCloseButton(CControl control) {
             super(control);

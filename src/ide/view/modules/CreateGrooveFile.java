@@ -1,26 +1,25 @@
 package ide.view.modules;
 
-import ide.model.Colors;
-import ide.model.project_explorer.Project;
-import ide.view.MainFrame;
+import ide.model.project_explorer.GrooveFile;
+import ide.model.project_explorer.Package;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.*;
 
-public class CreateProject extends JDialog {
+public class CreateGrooveFile extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JRadioButton emptyProjectRadioButton;
-    private JRadioButton fromTemplateRadioButton;
-    private JList list1;
     private JTextField textField1;
+    private JCheckBox createMainFunctionCheckBox;
+    private DefaultMutableTreeNode node;
 
-    public CreateProject() {
+    public CreateGrooveFile(DefaultMutableTreeNode node) {
+        this.node = node;
         setContentPane(contentPane);
         setModal(true);
-        setTitle("Create New Project...");
+        setTitle("Create New Groove");
         getRootPane().setDefaultButton(buttonOK);
 
         buttonOK.addActionListener(new ActionListener() {
@@ -49,37 +48,18 @@ public class CreateProject extends JDialog {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-        ButtonGroup cbGrp = new ButtonGroup();
-        cbGrp.add(emptyProjectRadioButton);
-        cbGrp.add(fromTemplateRadioButton);
-        fromTemplateRadioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (fromTemplateRadioButton.isSelected())
-                    list1.setEnabled(true);
-                else
-                    list1.setEnabled(false);
-            }
-        });
-
-        list1.setBorder(new LineBorder(Colors.GUTTER_FOREGROUND));
     }
 
     private void onOK() {
+        GrooveFile file = new GrooveFile();
+        file.setName(textField1.getText());
 
-        Project project = null;
-        if (fromTemplateRadioButton.isSelected()) {
-            if (list1.getSelectedValue() != null) {
-                //TODO: Create project from selected template
-            }
+        if (node instanceof Package) {
+
+            ((Package) node).createGrooveFile(file, createMainFunctionCheckBox.isSelected());
+
         }
 
-        if (project == null)
-            project = new Project();
-
-        project.setName(textField1.getText());
-        MainFrame.getInstance().getExplorerDock().createProject(project);
         dispose();
     }
 

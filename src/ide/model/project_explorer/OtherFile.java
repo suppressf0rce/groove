@@ -22,6 +22,12 @@ public class OtherFile extends DefaultMutableTreeNode {
         changed = false;
     }
 
+    public OtherFile() {
+        icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/file.png")));
+        opened = false;
+        changed = false;
+    }
+
     @Override
     public String toString() {
         return name;
@@ -49,5 +55,17 @@ public class OtherFile extends DefaultMutableTreeNode {
 
     public void setChanged(boolean changed) {
         this.changed = changed;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

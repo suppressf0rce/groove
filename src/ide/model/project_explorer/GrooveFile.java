@@ -22,6 +22,13 @@ public class GrooveFile extends DefaultMutableTreeNode {
         changed = false;
     }
 
+    public GrooveFile() {
+        icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/groove_file.png")));
+
+        opened = false;
+        changed = false;
+    }
+
     @Override
     public String toString() {
         return name;
@@ -49,5 +56,17 @@ public class GrooveFile extends DefaultMutableTreeNode {
 
     public void setChanged(boolean changed) {
         this.changed = changed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

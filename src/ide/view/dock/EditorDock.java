@@ -426,6 +426,8 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
         SyntaxScheme scheme = textArea.getSyntaxScheme();
         scheme.getStyle(Token.RESERVED_WORD).foreground = Colors.KEYWORD;
         scheme.getStyle(Token.RESERVED_WORD).font = Settings.EDITOR_FONT;
+        scheme.getStyle(Token.RESERVED_WORD_2).foreground = Colors.KEYWORD;
+        scheme.getStyle(Token.RESERVED_WORD_2).font = Settings.EDITOR_FONT;
         scheme.getStyle(Token.LITERAL_STRING_DOUBLE_QUOTE).foreground = Colors.STRING;
         scheme.getStyle(Token.LITERAL_STRING_DOUBLE_QUOTE).font = Settings.EDITOR_FONT;
         scheme.getStyle(Token.LITERAL_CHAR).foreground = Colors.STRING;
@@ -446,7 +448,9 @@ public class EditorDock extends DefaultMultipleCDockable implements SyntaxConsta
         scheme.getStyle(Token.FUNCTION).font = Settings.EDITOR_FONT;
         scheme.getStyle(Token.IDENTIFIER).foreground = Colors.VAR;
         scheme.getStyle(Token.IDENTIFIER).font = Settings.EDITOR_FONT;
-        scheme.getStyle(Token.FUNCTION).foreground = Colors.VAR;
+        scheme.getStyle(Token.FUNCTION).foreground = Colors.METHOD_DECL;
+        scheme.getStyle(Token.COMMENT_DOCUMENTATION).foreground = Colors.STRING;
+        scheme.getStyle(TokenTypes.COMMENT_DOCUMENTATION).font = Settings.EDITOR_FONT;
         scheme.getStyle(Token.FUNCTION).font = Settings.EDITOR_FONT;
         scheme.getStyle(Token.DATA_TYPE).foreground = Colors.KEYWORD;
         scheme.getStyle(Token.DATA_TYPE).font = Settings.EDITOR_FONT;

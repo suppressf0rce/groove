@@ -1,10 +1,15 @@
 package ide.model.project_explorer;
 
+import ide.control.FileWorker;
+import ide.view.MainFrame;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
+@SuppressWarnings("Duplicates")
 public class Project extends DefaultMutableTreeNode {
 
     private File file;
@@ -55,6 +60,40 @@ public class Project extends DefaultMutableTreeNode {
         opened = false;
         removeAllChildren();
     }
+
+    public void createPackage(Package pckg) {
+        if (!isOpened())
+            openProject();
+
+        File file = new File(getFile().getAbsolutePath() + File.separator + pckg.getName());
+
+        // attempt to create the directory here
+        boolean successful = file.mkdir();
+        if (successful) {
+            pckg.setFile(file);
+            add(pckg);
+        } else {
+            JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not create package directory! \nPlease try again", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void createOtherFile(OtherFile file) throws IOException {
+        if (!isOpened())
+            openProject();
+
+        File content = new File(getFile().getAbsolutePath() + File.separator + file.getName());
+
+        // attempt to create the directory here
+        boolean successful = content.createNewFile();
+        if (successful) {
+            file.setFile(content);
+            add(file);
+            FileWorker.open(file);
+        } else {
+            JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not create file! \nPlease try again", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 
     @Override
     public String toString() {

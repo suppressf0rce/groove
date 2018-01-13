@@ -1,26 +1,27 @@
 package ide.view.modules;
 
-import ide.model.Colors;
+import ide.model.project_explorer.OtherFile;
+import ide.model.project_explorer.Package;
 import ide.model.project_explorer.Project;
-import ide.view.MainFrame;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.*;
+import java.io.IOException;
 
-public class CreateProject extends JDialog {
+public class CreateOtherFile extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JRadioButton emptyProjectRadioButton;
-    private JRadioButton fromTemplateRadioButton;
-    private JList list1;
     private JTextField textField1;
 
-    public CreateProject() {
+    private DefaultMutableTreeNode node;
+
+    public CreateOtherFile(DefaultMutableTreeNode node) {
+        this.node = node;
         setContentPane(contentPane);
         setModal(true);
-        setTitle("Create New Project...");
+        setTitle("Create File");
         getRootPane().setDefaultButton(buttonOK);
 
         buttonOK.addActionListener(new ActionListener() {
@@ -49,37 +50,27 @@ public class CreateProject extends JDialog {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-        ButtonGroup cbGrp = new ButtonGroup();
-        cbGrp.add(emptyProjectRadioButton);
-        cbGrp.add(fromTemplateRadioButton);
-        fromTemplateRadioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (fromTemplateRadioButton.isSelected())
-                    list1.setEnabled(true);
-                else
-                    list1.setEnabled(false);
-            }
-        });
-
-        list1.setBorder(new LineBorder(Colors.GUTTER_FOREGROUND));
     }
 
     private void onOK() {
+        OtherFile file = new OtherFile();
+        file.setName(textField1.getText());
 
-        Project project = null;
-        if (fromTemplateRadioButton.isSelected()) {
-            if (list1.getSelectedValue() != null) {
-                //TODO: Create project from selected template
+        if (node instanceof Project) {
+            try {
+                ((Project) node).createOtherFile(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (node instanceof Package) {
+            try {
+                ((Package) node).createOtherFile(file);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
-        if (project == null)
-            project = new Project();
 
-        project.setName(textField1.getText());
-        MainFrame.getInstance().getExplorerDock().createProject(project);
         dispose();
     }
 
