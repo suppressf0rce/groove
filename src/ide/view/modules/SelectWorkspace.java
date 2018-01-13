@@ -4,6 +4,7 @@ import ide.model.Settings;
 import ide.view.MainFrame;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
@@ -18,6 +19,7 @@ public class SelectWorkspace extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         setTitle("Workspace Selection");
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/icon.png")));
         getRootPane().setDefaultButton(buttonOK);
 
         btnOK.addActionListener(new ActionListener() {

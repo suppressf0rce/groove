@@ -6,6 +6,7 @@ import ide.model.project_explorer.Project;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ public class CreateOtherFile extends JDialog {
         this.node = node;
         setContentPane(contentPane);
         setModal(true);
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/icon.png")));
         setTitle("Create File");
         getRootPane().setDefaultButton(buttonOK);
 

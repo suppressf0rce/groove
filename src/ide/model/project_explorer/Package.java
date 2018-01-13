@@ -140,8 +140,15 @@ public class Package extends DefaultMutableTreeNode implements Renameable, Delet
         File newFile = new File(file.getParentFile().getAbsolutePath() + File.separator + newName);
         if (!file.renameTo(newFile)) {
             JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not rename package", "Error", JOptionPane.ERROR_MESSAGE);
+        }else {
+            this.file = newFile;
+            this.name = newName;
         }
-        this.name = newName;
+    }
+
+    @Override
+    public String getOldName() {
+        return name;
     }
 
     @Override

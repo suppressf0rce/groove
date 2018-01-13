@@ -5,6 +5,7 @@ import ide.model.project_explorer.Package;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
 import java.awt.event.*;
 
 public class CreateGrooveFile extends JDialog {
@@ -20,6 +21,7 @@ public class CreateGrooveFile extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         setTitle("Create New Groove");
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/icon.png")));
         getRootPane().setDefaultButton(buttonOK);
 
         buttonOK.addActionListener(new ActionListener() {

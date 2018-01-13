@@ -4,4 +4,6 @@ public interface Renameable {
 
     public void rename(String newName);
 
+    public String getOldName();
+
 }

@@ -6,6 +6,7 @@ import ide.view.MainFrame;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import java.awt.*;
 import java.awt.event.*;
 
 public class CreateProject extends JDialog {
@@ -20,6 +21,7 @@ public class CreateProject extends JDialog {
     public CreateProject() {
         setContentPane(contentPane);
         setModal(true);
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("img/icon.png")));
         setTitle("Create New Project...");
         getRootPane().setDefaultButton(buttonOK);
 
