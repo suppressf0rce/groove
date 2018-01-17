@@ -12,7 +12,6 @@
     <orderEntry type="library" name="docking-frames-common" level="project" />
     <orderEntry type="library" name="docking-frames-core" level="project" />
     <orderEntry type="library" name="rsyntaxtextarea-2.5.0" level="project" />
-    <orderEntry type="library" name="spellchecker-2.0.5.1" level="project" />
     <orderEntry type="library" name="rsyntaxtextarea-2.6.1" level="project" />
     <orderEntry type="library" name="spellchecker-2.6.0" level="project" />
     <orderEntry type="library" name="autocomplete-2.6.1" level="project" />
@@ -23,5 +22,6 @@
     <orderEntry type="library" name="docking-frames-common" level="project" />
     <orderEntry type="library" name="darcula" level="project" />
     <orderEntry type="library" name="autocomplete-2.6.1" level="project" />
+    <orderEntry type="library" name="rhino-1.7.7.1" level="project" />
   </component>
 </module>

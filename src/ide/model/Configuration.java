@@ -50,7 +50,7 @@ public class Configuration {
 //        cmd.append(file.getAbsolutePath());
 
         // java binary
-        String java = System.getProperty("java.home") + "/bin/java";
+        String java = System.getProperty("java.home") + File.separator + "bin"+File.separator+"java";
         // vm arguments
         List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
         StringBuffer vmArgsOneLine = new StringBuffer();
@@ -72,7 +72,7 @@ public class Configuration {
             cmd.append("-jar " + new File(mainCommand[0]).getPath());
         } else {
             // else it's a .class, add the classpath and mainClass
-            cmd.append("-cp \"" + System.getProperty("java.class.path") + "\" " + mainCommand[0]);
+            //cmd.append("-cp \"" + System.getProperty("java.class.path").replaceAll(" ", "\\ ") + "\" " + mainCommand[0]);
         }
         // finally add program arguments
         //cmd.append(" --file "+file.getAbsolutePath());

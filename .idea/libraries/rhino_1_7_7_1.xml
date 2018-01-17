@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="spellchecker-2.0.5.1">
+  <library name="rhino-1.7.7.1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/res/spellchecker-2.0.5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/res/rhino-1.7.7.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
