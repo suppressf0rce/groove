@@ -9,6 +9,8 @@ import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 @SuppressWarnings("Duplicates")
 public class Package extends DefaultMutableTreeNode implements Renameable, Deleteable {
@@ -95,7 +97,7 @@ public class Package extends DefaultMutableTreeNode implements Renameable, Delet
         StringBuilder pck = new StringBuilder(name);
         TreeNode parent = getParent();
         while (parent instanceof Package) {
-            pck.insert(0, ((Package) getParent()).name + ".");
+            pck.insert(0, ((Package) parent).name + ".");
             parent = parent.getParent();
         }
 
@@ -153,6 +155,24 @@ public class Package extends DefaultMutableTreeNode implements Renameable, Delet
 
     @Override
     public void delete() {
+        Path directory = Paths.get(file.getPath());
+        try {
+            Files.walkFileTree(directory, new SimpleFileVisitor<java.nio.file.Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            //DO Nothing
+        }
         file.delete();
         removeFromParent();
     }

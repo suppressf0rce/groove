@@ -1,5 +1,7 @@
 package ide.view.dock;
 
+import ide.control.ConsoleKeyListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -18,9 +20,11 @@ public class ConsoleDock extends DockingWindow {
     public ConsoleDock() {
         super("Console", "img/console.png");
 
+
         console = new JTextArea();
         console.setFont(new Font("Monospaced", Font.PLAIN, 14));
         console.setEditable(false);
+        console.addKeyListener(new ConsoleKeyListener());
 
         setLayout(new BorderLayout());
         add(new JScrollPane(console), BorderLayout.CENTER);
@@ -85,5 +89,9 @@ public class ConsoleDock extends DockingWindow {
 
     public boolean isAccesable() {
         return accesable;
+    }
+
+    public BufferedWriter getIn() {
+        return in;
     }
 }

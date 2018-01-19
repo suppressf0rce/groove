@@ -8,6 +8,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 @SuppressWarnings("Duplicates")
 public class Project extends DefaultMutableTreeNode implements Renameable, Deleteable {
@@ -144,6 +146,24 @@ public class Project extends DefaultMutableTreeNode implements Renameable, Delet
 
     @Override
     public void delete() {
+        Path directory = Paths.get(file.getPath());
+        try {
+            Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            //DO Nothing
+        }
         file.delete();
         removeFromParent();
     }

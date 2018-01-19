@@ -29,12 +29,14 @@ public class SaveAllAction extends AbstractAction {
         for (i = 0; i < dock.getCDockableCount(); i++) {
             if (dock.getCDockable(i) instanceof EditorDock) {
 
-                if (((EditorDock) dock.getCDockable(i)).getNode() instanceof GrooveFile)
+                if (((EditorDock) dock.getCDockable(i)).getNode() instanceof GrooveFile) {
                     FileWorker.saveFile(((GrooveFile) ((EditorDock) dock.getCDockable(i)).getNode()).getFile(), ((EditorDock) dock.getCDockable(i)).getTextArea().getText());
-
-                if (((EditorDock) dock.getCDockable(i)).getNode() instanceof OtherFile)
+                    ((GrooveFile) ((EditorDock) dock.getCDockable(i)).getNode()).setChanged(false);
+                }
+                if (((EditorDock) dock.getCDockable(i)).getNode() instanceof OtherFile) {
                     FileWorker.saveFile(((OtherFile) ((EditorDock) dock.getCDockable(i)).getNode()).getFile(), ((EditorDock) dock.getCDockable(i)).getTextArea().getText());
-
+                    ((OtherFile) ((EditorDock) dock.getCDockable(i)).getNode()).setChanged(false);
+                }
             }
         }
 

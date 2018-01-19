@@ -50,7 +50,7 @@ public class Configuration {
 //        cmd.append(file.getAbsolutePath());
 
         // java binary
-        String java = System.getProperty("java.home") + File.separator + "bin"+File.separator+"java";
+        String java = System.getProperty("java.home") + "/bin/java";
         // vm arguments
         List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
         StringBuffer vmArgsOneLine = new StringBuffer();
@@ -72,7 +72,7 @@ public class Configuration {
             cmd.append("-jar " + new File(mainCommand[0]).getPath());
         } else {
             // else it's a .class, add the classpath and mainClass
-            //cmd.append("-cp \"" + System.getProperty("java.class.path").replaceAll(" ", "\\ ") + "\" " + mainCommand[0]);
+            cmd.append("-cp \"" + System.getProperty("java.class.path") + "\" " + mainCommand[0]);
         }
         // finally add program arguments
         //cmd.append(" --file "+file.getAbsolutePath());
@@ -88,6 +88,7 @@ public class Configuration {
         MainFrame.getInstance().getConsoleDock().loadIn(process.getInputStream());
         MainFrame.getInstance().getConsoleDock().loadErr(process.getErrorStream());
         MainFrame.getInstance().getConsoleDock().loadOut(process.getOutputStream());
+        MainFrame.getInstance().getConsoleDock().getConsole().setEditable(true);
 
         if (!MainFrame.getInstance().getConsoleDock().isRunning()) {
             MainFrame.getInstance().getConsoleDock().startConsole();
@@ -101,6 +102,7 @@ public class Configuration {
                 while (true) {
                     if (MainFrame.getInstance().getConsoleDock().isAccesable()) {
                         MainFrame.getInstance().getConsoleDock().getConsole().append("\nProcess exited with code: " + result);
+                        MainFrame.getInstance().getConsoleDock().getConsole().setEditable(false);
                         break;
                     }
                 }
@@ -119,6 +121,7 @@ public class Configuration {
     public void stop() {
         if (process != null && process.isAlive()) {
             process.destroyForcibly();
+            MainFrame.getInstance().getConsoleDock().getConsole().setEditable(false);
         }
     }
 

@@ -23,5 +23,6 @@
     <orderEntry type="library" name="darcula" level="project" />
     <orderEntry type="library" name="autocomplete-2.6.1" level="project" />
     <orderEntry type="library" name="rhino-1.7.7.1" level="project" />
+    <orderEntry type="library" name="lanterna-3.0.0" level="project" />
   </component>
 </module>
