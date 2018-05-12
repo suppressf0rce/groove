@@ -237,6 +237,8 @@ public class Lexer implements Cloneable{
 
         while (current_char != null && current_char == '\n')
             advance();
+
+        line++;
     }
 
     /**
@@ -247,8 +249,11 @@ public class Lexer implements Cloneable{
         advance();
         advance();
 
-        while((current_char != null && current_char != '*') || (peek(1) != null && peek(1) != '/'))
+        while ((current_char != null && current_char != '*') || (peek(1) != null && peek(1) != '/')) {
             advance();
+            if (current_char == '\n')
+                line++;
+        }
 
         advance();
 

@@ -1,5 +1,6 @@
 package Interpreter.groove;
 
+import java.lang.String;
 import java.util.Scanner;
 
 public class Console {
@@ -38,6 +39,10 @@ public class Console {
         System.out.println(line);
     }
 
+    public static void print() {
+        System.out.println();
+    }
+
 
     //STD Err functions
     //------------------------------------------------------------------------------------------------------------------
@@ -67,6 +72,10 @@ public class Console {
 
     public static void errprint(char line) {
         System.err.println(line);
+    }
+
+    public static void errprint() {
+        System.err.println();
     }
 
 

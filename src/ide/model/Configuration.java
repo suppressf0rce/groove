@@ -81,7 +81,7 @@ public class Configuration {
         // resources have been disposed before restarting the application
 
         MainFrame.getInstance().getConsoleDock().getConsole().setText("");
-        MainFrame.getInstance().getConsoleDock().getConsole().append("Starting Process...\n");
+        MainFrame.getInstance().getConsoleDock().write("Starting Process...\n", Colors.CONSOLE_FOREGROUND);
 
         process = Runtime.getRuntime().exec(cmd.toString());
 
@@ -101,7 +101,7 @@ public class Configuration {
 
                 while (true) {
                     if (MainFrame.getInstance().getConsoleDock().isAccesable()) {
-                        MainFrame.getInstance().getConsoleDock().getConsole().append("\nProcess exited with code: " + result);
+                        MainFrame.getInstance().getConsoleDock().write("\nProcess exited with code: " + result, Colors.CONSOLE_FOREGROUND);
                         MainFrame.getInstance().getConsoleDock().getConsole().setEditable(false);
                         break;
                     }

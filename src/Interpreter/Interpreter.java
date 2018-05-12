@@ -16,6 +16,8 @@ import java.util.ArrayList;
 @SuppressWarnings("Duplicates")
 public class Interpreter implements Visitor {
 
+    //TODO: IMplement switch case
+
     private Memory memory;
 
     private Interpreter() {
@@ -447,9 +449,14 @@ public class Interpreter implements Visitor {
 
     @Override
     public GType visit(TerOp terOp) {
+        GType result = visit(terOp.condition);
+        GType tmp = null;
+        if (((Terminal) result).value.equals("true")) {
+            tmp = visit(terOp.texpression);
+        } else
+            tmp = visit(terOp.fexpression);
 
-        //TODO: Implement this...
-        return null;
+        return tmp;
     }
 
     @Override

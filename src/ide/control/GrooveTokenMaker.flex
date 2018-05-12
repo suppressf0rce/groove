@@ -301,6 +301,7 @@ URL	= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <YYINITIAL> "float"					{ addToken(Token.DATA_TYPE); }
 <YYINITIAL> "int"					{ addToken(Token.DATA_TYPE); }
 <YYINITIAL> "long"					{ addToken(Token.DATA_TYPE); }
+<YYINITIAL> "boolean"				{ addToken(Token.DATA_TYPE); }
 <YYINITIAL> "string"				{ addToken(Token.DATA_TYPE); }
 <YYINITIAL> "void"					{ addToken(Token.DATA_TYPE); }
 <YYINITIAL> "enum"					{ addToken(Token.DATA_TYPE); }

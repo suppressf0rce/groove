@@ -1,20 +1,91 @@
 package examples
 
 import groove.Console
+import groove.String
 
+//Example Function
 let function test() be int:
     return 2
 end
 
+//Main Function
 let function main() be void:
 
-    let broj1, broj2 be int
 
-    broj1 = scanNextInt()
-    broj2 = scanNextInt()
+    // Declaration with assignment
+    let num = 10 be int
 
-    let rezultat = broj1 + broj2 be long
+    let num1, num2 be int
 
-    print(rezultat)
+    // Assigning from the function
+    num1 = test()
+
+    // Assigning from the builtin in console scan function
+    num2 = scanNextInt()
+
+    // Assigning with the addition
+    let result = num1 + num2 be long
+
+    print(result)
+
+    print(result%2)
+
+    result+=result**2
+    print(result)
+
+
+    //Working with the strings
+    let test = "This is test" be string
+
+    print(test)
+
+    //For loop example
+    let i be int
+    for(i = 0; i < strLen(test); i++):
+        print(strCharAt(test,i))
+    end
+
+    print()
+
+    //While loop example
+    let j be int
+    j = 0
+    while(j < strLen(test)):
+
+        if(strCharAt(test, j)=='e'):
+            break
+        end
+        else if(strCharAt(test,j)=='i'):
+		print('-')
+		j++
+		continue
+        end
+
+        print(strCharAt(test, j))
+        j++
+    end
+
+    //If - Else Statement example
+    let stm = true be boolean
+    if(stm):
+        print("Success")
+    end
+    else:
+        print("Project failed miserably")
+    end
+
+    //Ter operation
+    let str = "Am i cool?" be string
+    str=="Am i cool?"?stm?str = "Yes i'm cool":str="I've failed even more below the ground":str = "I've failed in the life"
+    print(str)
+
 end
-//TODO: String functions
+
+
+/* Note:
+	There is no support for the arrays
+	There is no support for the Matrix
+	There is no support for Switch / Case
+	This is not OOP language
+	There is no support for command line args
+*/

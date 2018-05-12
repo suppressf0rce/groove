@@ -29,8 +29,6 @@ public class ProjectExplorerDock extends DockingWindow {
 
         setLayout(new BorderLayout());
         add(new JScrollPane(workspaceTree), BorderLayout.CENTER);
-
-        //TODO: Add functionality of deleting the files
     }
 
     public void openWorkspace(File file) {

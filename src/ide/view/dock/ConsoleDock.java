@@ -1,14 +1,19 @@
 package ide.view.dock;
 
 import ide.control.ConsoleKeyListener;
+import ide.model.Colors;
 
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.io.*;
 
 public class ConsoleDock extends DockingWindow {
 
-    private JTextArea console;
+    private JTextPane console;
     private volatile BufferedReader out;
     private volatile BufferedReader err;
     private volatile BufferedWriter in;
@@ -21,8 +26,9 @@ public class ConsoleDock extends DockingWindow {
         super("Console", "img/console.png");
 
 
-        console = new JTextArea();
+        console = new JTextPane();
         console.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        console.setForeground(Color.GREEN);
         console.setEditable(false);
         console.addKeyListener(new ConsoleKeyListener());
 
@@ -50,14 +56,14 @@ public class ConsoleDock extends DockingWindow {
 
                 accesable = false;
                 while ((line = out.readLine()) != null) {
-                    console.append(line);
-                    console.append(System.getProperty("line.separator"));
+                    write(line, Color.LIGHT_GRAY);
+                    write(System.getProperty("line.separator"), Color.LIGHT_GRAY);
                     console.setCaretPosition(console.getDocument().getLength());
                 }
 
                 while ((line = err.readLine()) != null) {
-                    console.append(line);
-                    console.append(System.getProperty("line.separator"));
+                    write(line, Colors.CONSOLE_ERROR);
+                    write(System.getProperty("line.separator"), Colors.CONSOLE_FOREGROUND);
                     console.setCaretPosition(console.getDocument().getLength());
                 }
                 accesable = true;
@@ -83,7 +89,7 @@ public class ConsoleDock extends DockingWindow {
         return consoleThread;
     }
 
-    public JTextArea getConsole() {
+    public JTextPane getConsole() {
         return console;
     }
 
@@ -93,5 +99,16 @@ public class ConsoleDock extends DockingWindow {
 
     public BufferedWriter getIn() {
         return in;
+    }
+
+    public void write(String msg, Color c) {
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Monospaced");
+
+        int len = console.getDocument().getLength();
+        console.setCaretPosition(len);
+        console.setCharacterAttributes(aset, false);
+        console.replaceSelection(msg);
     }
 }

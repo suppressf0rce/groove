@@ -487,10 +487,32 @@ public class Parser implements Cloneable {
             Expression texpression = expression();
             eat(TokenType.COLON);
             int line = lexer.line;
-            Node fexpression =  conditional_expression();
+            Node fexpression = check_ternary() ? conditional_expression() : expression();
             return new TerOp(node, texpression, fexpression, line);
         }
         return node;
+    }
+
+    private boolean check_ternary() {
+        Lexer tmpLexer = new Lexer(lexer);
+        Lexer currentLexer = lexer;
+        Token currentToken = current_token;
+        lexer = tmpLexer;
+
+        boolean result = false;
+        while (current_token.type != TokenType.EOL) {
+
+            if (current_token.type == TokenType.QUESTION_MARK) {
+                result = true;
+                break;
+            }
+
+            current_token = lexer.get_next_token();
+        }
+
+        lexer = currentLexer;
+        current_token = currentToken;
+        return result;
     }
 
     private Node logical_and_expression() {
